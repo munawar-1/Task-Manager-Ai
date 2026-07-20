@@ -1,12 +1,12 @@
 
-const BASE_URL = 'http://localhost:3000/api'; // Change this to your actual backend URL once developed
+const BASE_URL = 'http://localhost:8080/api'; // Change this to your actual backend URL once developed
 
 /**
  * Helper function for handling API requests
  */
 async function fetchAPI(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
-  
+
   const defaultOptions = {
     headers: {
       'Content-Type': 'application/json',

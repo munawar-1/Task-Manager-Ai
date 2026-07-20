@@ -30,6 +30,8 @@ public class TaskService implements ITaskService{
 
     @Override
     public Task updateTask(Long id, Task task) {
+        // Ensure we update the existing row rather than creating a new one
+        task.setId(id);
         return repo.save(task);
     }
 

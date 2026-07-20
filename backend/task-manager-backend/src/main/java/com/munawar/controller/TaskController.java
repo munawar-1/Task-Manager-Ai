@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/tasks")
 public class TaskController {
 
@@ -29,7 +30,8 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<Task> addTask(@RequestBody Task task){
-        return new ResponseEntity<>(task, HttpStatus.CREATED);
+        Task savedTask = service.createNewTask(task);
+        return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id , @RequestBody Task task){
