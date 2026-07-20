@@ -1,7 +1,9 @@
 package com.munawar.service;
 
 import com.munawar.entity.Task;
+import com.munawar.entity.User;
 import com.munawar.repo.ITaskRepo;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,21 @@ public class TaskService implements ITaskService{
     @Autowired
     private ITaskRepo repo;
 
+    private User getAuthenticatedUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            return (User) principal;
+        }
+        throw new RuntimeException("User not authenticated");
+    }
+
     @Override
     public List<Task> getAllTasks() {
-
-        return repo.findAll();
+        // Fetch only tasks for the authenticated user
+        User user = getAuthenticatedUser();
+        return repo.findAll().stream()
+                .filter(task -> task.getUser() != null && task.getUser().getId().equals(user.getId()))
+                .toList();
     }
 
     @Override
@@ -25,13 +38,18 @@ public class TaskService implements ITaskService{
 
     @Override
     public Task createNewTask(Task task) {
+        task.setUser(getAuthenticatedUser());
         return repo.save(task);
     }
 
     @Override
     public Task updateTask(Long id, Task task) {
-        //react is sending the update not task object so we are seeing if the feild sent is not null then only set the field
         Task existingTask = repo.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        
+        // Ensure user can only update their own task
+        if (existingTask.getUser() == null || !existingTask.getUser().getId().equals(getAuthenticatedUser().getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
         
         if (task.getText() != null) existingTask.setText(task.getText());
         if (task.getType() != null) existingTask.setType(task.getType());
@@ -48,6 +66,10 @@ public class TaskService implements ITaskService{
 
     @Override
     public void deleteTask(Long id) {
+        Task existingTask = repo.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        if (existingTask.getUser() == null || !existingTask.getUser().getId().equals(getAuthenticatedUser().getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
         repo.deleteById(id);
     }
 }
