@@ -30,9 +30,20 @@ public class TaskService implements ITaskService{
 
     @Override
     public Task updateTask(Long id, Task task) {
-        // Ensure we update the existing row rather than creating a new one
-        task.setId(id);
-        return repo.save(task);
+        //react is sending the update not task object so we are seeing if the feild sent is not null then only set the field
+        Task existingTask = repo.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        
+        if (task.getText() != null) existingTask.setText(task.getText());
+        if (task.getType() != null) existingTask.setType(task.getType());
+        if (task.getTimeframe() != null) existingTask.setTimeframe(task.getTimeframe());
+        if (task.getCategory() != null) existingTask.setCategory(task.getCategory());
+        if (task.getPriority() != null) existingTask.setPriority(task.getPriority());
+        if (task.getStatus() != null) {
+            existingTask.setStatus(task.getStatus());
+            existingTask.setCompletedAt(task.getCompletedAt());
+        }
+        
+        return repo.save(existingTask);
     }
 
     @Override

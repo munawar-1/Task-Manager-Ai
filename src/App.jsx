@@ -133,8 +133,8 @@ function App() {
   }
 
   const renderTaskCard = (task) => (
-    <div 
-      key={task.id} 
+    <div
+      key={task.id}
       className="task-card"
       draggable
       onDragStart={(e) => handleDragStart(e, task.id)}
@@ -150,7 +150,7 @@ function App() {
         )}
       </div>
       <p className="task-text">{task.text}</p>
-      
+
       <div className="task-actions">
         <div className="move-buttons">
           {/* Arrow buttons removed in favor of drag and drop */}
@@ -189,16 +189,16 @@ function App() {
       <header className="header">
         <div className="header-content">
           <h1>Workspace</h1>
-          
+
           <div className="view-toggle">
-            <button 
-              className={`toggle-btn ${viewMode === 'board' ? 'active' : ''}`} 
+            <button
+              className={`toggle-btn ${viewMode === 'board' ? 'active' : ''}`}
               onClick={() => setViewMode('board')}
             >
               Board
             </button>
-            <button 
-              className={`toggle-btn ${viewMode === 'reports' ? 'active' : ''}`} 
+            <button
+              className={`toggle-btn ${viewMode === 'reports' ? 'active' : ''}`}
               onClick={() => setViewMode('reports')}
             >
               Reports
@@ -217,19 +217,19 @@ function App() {
       </header>
 
       <div className="tabs-container">
-        <button 
+        <button
           className={`tab-btn ${activeTab === 'daily' ? 'active' : ''}`}
           onClick={() => handleTabChange('daily')}
         >
           Daily Tasks
         </button>
-        <button 
+        <button
           className={`tab-btn ${activeTab === 'monthly' ? 'active' : ''}`}
           onClick={() => handleTabChange('monthly')}
         >
           Monthly Targets
         </button>
-        <button 
+        <button
           className={`tab-btn ${activeTab === 'yearly' ? 'active' : ''}`}
           onClick={() => handleTabChange('yearly')}
         >
@@ -257,10 +257,10 @@ function App() {
               onChange={(e) => setCategoryValue(e.target.value)}
               style={{ width: '130px' }}
             />
-            
-            <select 
-              className="timeframe-input" 
-              value={priorityValue} 
+
+            <select
+              className="timeframe-input"
+              value={priorityValue}
               onChange={(e) => setPriorityValue(e.target.value)}
               style={{ width: '100px' }}
             >
@@ -268,21 +268,21 @@ function App() {
               <option value="Medium">Medium</option>
               <option value="High">High</option>
             </select>
-            
+
             {activeTab === 'daily' && (
-              <input 
-                type="date" 
-                className="timeframe-input" 
-                value={timeframeValue} 
+              <input
+                type="date"
+                className="timeframe-input"
+                value={timeframeValue}
                 onChange={(e) => setTimeframeValue(e.target.value)}
                 required
               />
             )}
-            
+
             {activeTab === 'monthly' && (
-              <select 
-                className="timeframe-input" 
-                value={timeframeValue} 
+              <select
+                className="timeframe-input"
+                value={timeframeValue}
                 onChange={(e) => setTimeframeValue(e.target.value)}
                 required
               >
@@ -292,13 +292,13 @@ function App() {
                 ))}
               </select>
             )}
-            
+
             {activeTab === 'yearly' && (
-              <input 
-                type="number" 
-                className="timeframe-input" 
+              <input
+                type="number"
+                className="timeframe-input"
                 placeholder="Year (e.g. 2024)"
-                value={timeframeValue} 
+                value={timeframeValue}
                 onChange={(e) => setTimeframeValue(e.target.value)}
                 required
                 min="2024"
@@ -306,8 +306,8 @@ function App() {
               />
             )}
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="add-button"
               disabled={!inputValue.trim() || !timeframeValue}
             >
@@ -316,7 +316,7 @@ function App() {
           </form>
 
           <div className="board">
-            <div 
+            <div
               className="column todo"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, 'todo')}
@@ -334,7 +334,7 @@ function App() {
               </div>
             </div>
 
-            <div 
+            <div
               className="column in-process"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, 'in-process')}
@@ -352,7 +352,7 @@ function App() {
               </div>
             </div>
 
-            <div 
+            <div
               className="column done"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, 'done')}
