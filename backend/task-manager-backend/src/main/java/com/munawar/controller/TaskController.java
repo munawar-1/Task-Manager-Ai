@@ -1,0 +1,44 @@
+package com.munawar.controller;
+
+import com.munawar.entity.Task;
+import com.munawar.service.ITaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/tasks")
+public class TaskController {
+
+    @Autowired
+    private ITaskService service;
+
+    @GetMapping
+    public ResponseEntity<Task> getTask(@PathVariable Long id){
+
+        return new ResponseEntity<>(service.getTaskById(id) , HttpStatus.OK);
+
+    }
+    @GetMapping
+    public ResponseEntity<List<Task>> getAllTasks(){
+      return new ResponseEntity<>(service.getAllTasks() , HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Task> addTask(@RequestBody Task task){
+        return new ResponseEntity<>(task, HttpStatus.CREATED);
+    }
+    @PutMapping
+    public ResponseEntity<Task> updateTask(@PathVariable Long id , @RequestBody Task task){
+
+        return new ResponseEntity<>(service.updateTask(id, task) , HttpStatus.OK);
+    }
+    @DeleteMapping
+    public ResponseEntity deleteTask(@PathVariable Long id){
+        service.deleteTask(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+}
