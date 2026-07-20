@@ -22,6 +22,37 @@
   font-size: 1.1rem;
 }
 
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 auto 1.5rem;
+  max-width: 800px;
+  width: 100%;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.tab-btn.active {
+  color: var(--primary-accent);
+  background: white;
+  border-color: var(--primary-accent);
+  box-shadow: 0 4px 6px rgba(99, 102, 241, 0.1);
+}
+
 .add-task-container {
   display: flex;
   gap: 1rem;
@@ -45,13 +76,16 @@
   padding: 0.5rem;
 }
 
-.type-select {
+.timeframe-input {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   background: white;
   font-weight: 500;
   color: var(--text-main);
+  cursor: text;
+}
+select.timeframe-input {
   cursor: pointer;
 }
 
@@ -141,6 +175,11 @@
   transition: all 0.2s ease;
   border: 1px solid transparent;
   animation: slideUp 0.3s ease-out;
+  cursor: grab;
+}
+
+.task-card:active {
+  cursor: grabbing;
 }
 
 @keyframes slideUp {
@@ -160,15 +199,28 @@
   align-items: flex-start;
 }
 
-.daily-badge {
-  background: var(--daily-badge-bg);
-  color: var(--daily-badge-text);
+.type-badge {
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.daily-badge {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.monthly-badge {
+  background: #e0e7ff;
+  color: #4f46e5;
+}
+
+.yearly-badge {
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .task-text {
