@@ -16,7 +16,7 @@ public class TaskController {
     @Autowired
     private ITaskService service;
 
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<Task> getTask(@PathVariable Long id){
 
         return new ResponseEntity<>(service.getTaskById(id) , HttpStatus.OK);
@@ -31,12 +31,12 @@ public class TaskController {
     public ResponseEntity<Task> addTask(@RequestBody Task task){
         return new ResponseEntity<>(task, HttpStatus.CREATED);
     }
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id , @RequestBody Task task){
 
         return new ResponseEntity<>(service.updateTask(id, task) , HttpStatus.OK);
     }
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteTask(@PathVariable Long id){
         service.deleteTask(id);
         return new ResponseEntity(HttpStatus.OK);
