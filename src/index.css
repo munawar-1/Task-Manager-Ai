@@ -10,13 +10,59 @@
   --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
   --primary-accent: #6366f1; /* Indigo */
   --primary-hover: #4f46e5;
-  --daily-badge-bg: #fee2e2;
-  --daily-badge-text: #ef4444;
   --todo-border: #e5e7eb;
   --in-process-border: #60a5fa;
   --done-border: #34d399;
   
+  /* Component specific variables */
+  --input-bg: white;
+  --input-border: #e5e7eb;
+  --column-bg: rgba(249, 250, 251, 0.5);
+  --task-card-bg: white;
+  --task-card-hover-border: #f3f4f6;
+  --btn-hover-bg: rgba(255, 255, 255, 0.5);
+  --action-btn-bg: #f3f4f6;
+  --delete-btn-hover-bg: #fee2e2;
+  
+  --badge-daily-bg: #fee2e2;
+  --badge-daily-text: #ef4444;
+  --badge-monthly-bg: #e0e7ff;
+  --badge-monthly-text: #4f46e5;
+  --badge-yearly-bg: #dcfce7;
+  --badge-yearly-text: #16a34a;
+
   --font-family: 'Outfit', sans-serif;
+}
+
+[data-theme='dark'] {
+  --bg-color: #121212;
+  --bg-gradient: linear-gradient(135deg, #1e1e1e 0%, #121212 100%);
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --card-bg: rgba(45, 45, 45, 0.7);
+  --card-border: rgba(64, 64, 64, 0.5);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  --primary-accent: #8b5cf6;
+  --primary-hover: #a78bfa;
+  --todo-border: #404040;
+  --in-process-border: #3b82f6;
+  --done-border: #10b981;
+  
+  --input-bg: #2d2d2d;
+  --input-border: #404040;
+  --column-bg: rgba(30, 30, 30, 0.5);
+  --task-card-bg: #2d2d2d;
+  --task-card-hover-border: #525252;
+  --btn-hover-bg: rgba(255, 255, 255, 0.1);
+  --action-btn-bg: #404040;
+  --delete-btn-hover-bg: rgba(239, 68, 68, 0.2);
+  
+  --badge-daily-bg: rgba(239, 68, 68, 0.2);
+  --badge-daily-text: #fca5a5;
+  --badge-monthly-bg: rgba(99, 102, 241, 0.2);
+  --badge-monthly-text: #a5b4fc;
+  --badge-yearly-bg: rgba(34, 197, 94, 0.2);
+  --badge-yearly-text: #86efac;
 }
 
 * {

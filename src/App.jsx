@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
@@ -25,6 +25,21 @@ function App() {
 
   const [activeTab, setActiveTab] = useState('daily') // 'daily', 'monthly', 'yearly'
   const [timeframeValue, setTimeframeValue] = useState(() => getCurrentTimeframe('daily'))
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode')
+    return saved ? JSON.parse(saved) : false
+  })
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.setAttribute('data-theme', 'dark')
+    } else {
+      document.body.removeAttribute('data-theme')
+    }
+    localStorage.setItem('darkMode', JSON.stringify(isDarkMode))
+  }, [isDarkMode])
+
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode)
 
   // Handle changing tabs to set default timeframe value
   const handleTabChange = (tab) => {
@@ -124,7 +139,16 @@ function App() {
   return (
     <div className="app-container">
       <header className="header">
-        <h1>Workspace</h1>
+        <div className="header-content">
+          <h1>Workspace</h1>
+          <button className="theme-toggle" onClick={toggleDarkMode} title="Toggle Dark Mode">
+            {isDarkMode ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            )}
+          </button>
+        </div>
         <p>Organize your day, beautifully.</p>
       </header>
 
