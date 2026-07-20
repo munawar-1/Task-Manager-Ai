@@ -249,16 +249,41 @@ select.timeframe-input {
 .task-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  gap: 0.5rem;
 }
 
 .type-badge {
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.priority-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.priority-low {
+  background: var(--badge-monthly-bg);
+  color: var(--badge-monthly-text);
+}
+
+.priority-medium {
+  background: var(--badge-yearly-bg);
+  color: var(--badge-yearly-text);
+}
+
+.priority-high {
+  background: var(--badge-daily-bg);
+  color: var(--badge-daily-text);
 }
 
 .daily-badge {

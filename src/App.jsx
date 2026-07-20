@@ -9,6 +9,7 @@ function App() {
   })
   const [inputValue, setInputValue] = useState('')
   const [categoryValue, setCategoryValue] = useState('')
+  const [priorityValue, setPriorityValue] = useState('Medium')
   const [viewMode, setViewMode] = useState('board') // 'board', 'reports'
   const getCurrentTimeframe = (tab) => {
     const now = new Date()
@@ -67,6 +68,7 @@ function App() {
       type: activeTab,
       timeframe: timeframeValue,
       category: categoryValue.trim() || 'General',
+      priority: priorityValue,
       status: 'todo', // 'todo', 'in-process', 'done'
       createdAt: new Date().toISOString(),
       completedAt: null
@@ -118,6 +120,11 @@ function App() {
         <span className={`type-badge ${task.type}-badge`}>
           {task.type === 'daily' ? new Date(task.timeframe).toLocaleDateString() : task.timeframe}
         </span>
+        {task.priority && (
+          <span className={`priority-badge priority-${task.priority.toLowerCase()}`}>
+            {task.priority}
+          </span>
+        )}
       </div>
       <p className="task-text">{task.text}</p>
       
@@ -225,8 +232,19 @@ function App() {
               placeholder="Category (e.g. Work)"
               value={categoryValue}
               onChange={(e) => setCategoryValue(e.target.value)}
-              style={{ width: '150px' }}
+              style={{ width: '130px' }}
             />
+            
+            <select 
+              className="timeframe-input" 
+              value={priorityValue} 
+              onChange={(e) => setPriorityValue(e.target.value)}
+              style={{ width: '100px' }}
+            >
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
             
             {activeTab === 'daily' && (
               <input 

@@ -6,15 +6,61 @@
   border: 1px solid var(--card-border);
 }
 
-.heatmap-container h4 {
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
+}
+
+.heatmap-container h4 {
+  margin: 0;
   color: var(--text-main);
   font-weight: 600;
+}
+
+.heatmap-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.heatmap-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.heatmap-stat-value {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-main);
+}
+
+.heatmap-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .heatmap-wrapper {
   overflow-x: auto;
   padding-bottom: 0.5rem;
+}
+
+.heatmap-months-container {
+  display: flex;
+  gap: 8px;
+}
+
+.heatmap-month-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heatmap-month-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: left;
 }
 
 .heatmap-grid {
