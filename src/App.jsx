@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import Reports from './Reports'
 
 function App() {
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState(() => {
+    const saved = localStorage.getItem('tasks')
+    return saved ? JSON.parse(saved) : []
+  })
   const [inputValue, setInputValue] = useState('')
+  const [categoryValue, setCategoryValue] = useState('')
+  const [viewMode, setViewMode] = useState('board') // 'board', 'reports'
   const getCurrentTimeframe = (tab) => {
     const now = new Date()
     if (tab === 'daily') {
@@ -39,6 +45,10 @@ function App() {
     localStorage.setItem('darkMode', JSON.stringify(isDarkMode))
   }, [isDarkMode])
 
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+  }, [tasks])
+
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode)
 
   // Handle changing tabs to set default timeframe value
@@ -56,19 +66,27 @@ function App() {
       text: inputValue.trim(),
       type: activeTab,
       timeframe: timeframeValue,
+      category: categoryValue.trim() || 'General',
       status: 'todo', // 'todo', 'in-process', 'done'
+      createdAt: new Date().toISOString(),
+      completedAt: null
     }
 
     setTasks([...tasks, newTask])
     setInputValue('')
+    setCategoryValue('')
     setTimeframeValue(getCurrentTimeframe(activeTab))
   }
 
   const updateTaskStatus = (id, newStatus) => {
     setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, status: newStatus } : task
-      )
+      tasks.map((task) => {
+        if (task.id === id) {
+          const completedAt = newStatus === 'done' ? new Date().toISOString() : null;
+          return { ...task, status: newStatus, completedAt };
+        }
+        return task;
+      })
     )
   }
 
@@ -141,6 +159,22 @@ function App() {
       <header className="header">
         <div className="header-content">
           <h1>Workspace</h1>
+          
+          <div className="view-toggle">
+            <button 
+              className={`toggle-btn ${viewMode === 'board' ? 'active' : ''}`} 
+              onClick={() => setViewMode('board')}
+            >
+              Board
+            </button>
+            <button 
+              className={`toggle-btn ${viewMode === 'reports' ? 'active' : ''}`} 
+              onClick={() => setViewMode('reports')}
+            >
+              Reports
+            </button>
+          </div>
+
           <button className="theme-toggle" onClick={toggleDarkMode} title="Toggle Dark Mode">
             {isDarkMode ? (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
@@ -173,116 +207,130 @@ function App() {
         </button>
       </div>
 
-      <form onSubmit={handleAddTask} className="add-task-container">
-        <input
-          type="text"
-          className="task-input"
-          placeholder={getPlaceholderText()}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        
-        {activeTab === 'daily' && (
-          <input 
-            type="date" 
-            className="timeframe-input" 
-            value={timeframeValue} 
-            onChange={(e) => setTimeframeValue(e.target.value)}
-            required
-          />
-        )}
-        
-        {activeTab === 'monthly' && (
-          <select 
-            className="timeframe-input" 
-            value={timeframeValue} 
-            onChange={(e) => setTimeframeValue(e.target.value)}
-            required
-          >
-            <option value="" disabled>Select Month</option>
-            {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
-              <option key={month} value={month}>{month}</option>
-            ))}
-          </select>
-        )}
-        
-        {activeTab === 'yearly' && (
-          <input 
-            type="number" 
-            className="timeframe-input" 
-            placeholder="Year (e.g. 2024)"
-            value={timeframeValue} 
-            onChange={(e) => setTimeframeValue(e.target.value)}
-            required
-            min="2024"
-            max="2100"
-          />
-        )}
-
-        <button 
-          type="submit" 
-          className="add-button"
-          disabled={!inputValue.trim() || !timeframeValue}
-        >
-          Add
-        </button>
-      </form>
-
-      <div className="board">
-        <div 
-          className="column todo"
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, 'todo')}
-        >
-          <div className="column-header">
-            To Do
-            <span className="task-count">{todoTasks.length}</span>
-          </div>
-          <div className="task-list">
-            {todoTasks.length === 0 ? (
-              <div className="empty-column">No tasks here</div>
-            ) : (
-              todoTasks.map(renderTaskCard)
+      {viewMode === 'reports' ? (
+        <Reports tasks={tasks} activeTab={activeTab} handleTabChange={handleTabChange} />
+      ) : (
+        <>
+          <form onSubmit={handleAddTask} className="add-task-container">
+            <input
+              type="text"
+              className="task-input"
+              placeholder={getPlaceholderText()}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            <input
+              type="text"
+              className="timeframe-input"
+              placeholder="Category (e.g. Work)"
+              value={categoryValue}
+              onChange={(e) => setCategoryValue(e.target.value)}
+              style={{ width: '150px' }}
+            />
+            
+            {activeTab === 'daily' && (
+              <input 
+                type="date" 
+                className="timeframe-input" 
+                value={timeframeValue} 
+                onChange={(e) => setTimeframeValue(e.target.value)}
+                required
+              />
             )}
-          </div>
-        </div>
-
-        <div 
-          className="column in-process"
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, 'in-process')}
-        >
-          <div className="column-header">
-            In Process
-            <span className="task-count">{inProcessTasks.length}</span>
-          </div>
-          <div className="task-list">
-            {inProcessTasks.length === 0 ? (
-              <div className="empty-column">Nothing in process</div>
-            ) : (
-              inProcessTasks.map(renderTaskCard)
+            
+            {activeTab === 'monthly' && (
+              <select 
+                className="timeframe-input" 
+                value={timeframeValue} 
+                onChange={(e) => setTimeframeValue(e.target.value)}
+                required
+              >
+                <option value="" disabled>Select Month</option>
+                {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
+                  <option key={month} value={month}>{month}</option>
+                ))}
+              </select>
             )}
-          </div>
-        </div>
-
-        <div 
-          className="column done"
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, 'done')}
-        >
-          <div className="column-header">
-            Done
-            <span className="task-count">{doneTasks.length}</span>
-          </div>
-          <div className="task-list">
-            {doneTasks.length === 0 ? (
-              <div className="empty-column">No completed tasks</div>
-            ) : (
-              doneTasks.map(renderTaskCard)
+            
+            {activeTab === 'yearly' && (
+              <input 
+                type="number" 
+                className="timeframe-input" 
+                placeholder="Year (e.g. 2024)"
+                value={timeframeValue} 
+                onChange={(e) => setTimeframeValue(e.target.value)}
+                required
+                min="2024"
+                max="2100"
+              />
             )}
+
+            <button 
+              type="submit" 
+              className="add-button"
+              disabled={!inputValue.trim() || !timeframeValue}
+            >
+              Add
+            </button>
+          </form>
+
+          <div className="board">
+            <div 
+              className="column todo"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, 'todo')}
+            >
+              <div className="column-header">
+                To Do
+                <span className="task-count">{todoTasks.length}</span>
+              </div>
+              <div className="task-list">
+                {todoTasks.length === 0 ? (
+                  <div className="empty-column">No tasks here</div>
+                ) : (
+                  todoTasks.map(renderTaskCard)
+                )}
+              </div>
+            </div>
+
+            <div 
+              className="column in-process"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, 'in-process')}
+            >
+              <div className="column-header">
+                In Process
+                <span className="task-count">{inProcessTasks.length}</span>
+              </div>
+              <div className="task-list">
+                {inProcessTasks.length === 0 ? (
+                  <div className="empty-column">Nothing in process</div>
+                ) : (
+                  inProcessTasks.map(renderTaskCard)
+                )}
+              </div>
+            </div>
+
+            <div 
+              className="column done"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, 'done')}
+            >
+              <div className="column-header">
+                Done
+                <span className="task-count">{doneTasks.length}</span>
+              </div>
+              <div className="task-list">
+                {doneTasks.length === 0 ? (
+                  <div className="empty-column">No completed tasks</div>
+                ) : (
+                  doneTasks.map(renderTaskCard)
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   )
 }

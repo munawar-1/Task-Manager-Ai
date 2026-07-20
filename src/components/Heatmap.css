@@ -1,0 +1,87 @@
+.heatmap-container {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+}
+
+.heatmap-container h4 {
+  margin-bottom: 1rem;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.heatmap-wrapper {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  grid-auto-flow: column;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background-color: var(--todo-border);
+  transition: all 0.2s ease;
+}
+
+[data-theme='dark'] .heatmap-cell {
+  background-color: #2d3748; /* darker base color for dark mode */
+}
+
+/* Leetcode / GitHub style colors */
+.heatmap-cell.level-0 {
+  background-color: var(--todo-border);
+}
+[data-theme='dark'] .heatmap-cell.level-0 {
+  background-color: #2d3748;
+}
+
+.heatmap-cell.level-1 {
+  background-color: #c6e48b;
+}
+[data-theme='dark'] .heatmap-cell.level-1 {
+  background-color: #0e4429;
+}
+
+.heatmap-cell.level-2 {
+  background-color: #7bc96f;
+}
+[data-theme='dark'] .heatmap-cell.level-2 {
+  background-color: #006d32;
+}
+
+.heatmap-cell.level-3 {
+  background-color: #239a3b;
+}
+[data-theme='dark'] .heatmap-cell.level-3 {
+  background-color: #26a641;
+}
+
+.heatmap-cell.level-4 {
+  background-color: #196127;
+}
+[data-theme='dark'] .heatmap-cell.level-4 {
+  background-color: #39d353;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}

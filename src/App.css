@@ -27,8 +27,6 @@
 }
 
 .theme-toggle {
-  position: absolute;
-  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,11 +34,40 @@
   border-radius: 50%;
   color: var(--text-muted);
   transition: all 0.2s ease;
+  position: absolute;
+  right: 0;
 }
 
 .theme-toggle:hover {
   color: var(--primary-accent);
   background: var(--btn-hover-bg);
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-left: 1rem;
+}
+
+.toggle-btn {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+  background: var(--btn-hover-bg);
+  color: var(--text-main);
+}
+
+.toggle-btn.active {
+  background: var(--primary-accent);
+  color: white;
 }
 
 .header p {
