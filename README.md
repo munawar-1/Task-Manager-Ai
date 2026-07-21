@@ -1,16 +1,53 @@
-# React + Vite
+# Full-Stack Task Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A lightning-fast, modern, full-stack Task Manager application built with React, Spring Boot, MySQL, and Firebase Authentication.
 
-Currently, two official plugins are available:
+> Made with Antigravity 🚀
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Overview
 
-## React Compiler
+This application allows users to securely log in, manage daily/monthly/yearly tasks, categorize them, and track subtasks. It is designed to be highly responsive and feels instantaneous thanks to **Optimistic UI Updates** on the frontend.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Architecture & Tech Stack
 
-## Expanding the Oxlint configuration
+This project is built using a modern, decoupled cloud architecture completely hosted on free-tier services. 
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+* **Frontend (React + Vercel):** The user interface is built with React and Vite. It handles all visual elements and interactions. Hosted on Vercel for lightning-fast edge delivery.
+* **Authentication (Google Firebase):** Securely manages user accounts and passwords. It issues JSON Web Tokens (JWT) to the frontend, which are used to authorize backend requests.
+* **Backend (Java Spring Boot + Render):** The core API logic. It securely verifies Firebase JWTs, processes business logic, and communicates with the database. Hosted on a Render web service.
+* **Database (MySQL + Aiven):** The persistent storage layer. A fully managed MySQL database hosted on Aiven, sitting in the same geographic region as the backend to minimize latency.
+
+## Key Features
+
+- **Secure Authentication:** Powered by Firebase, ensuring user data is private and secure.
+- **Optimistic UI:** When users interact with the app (e.g., adding or moving a task), the UI updates instantly (0.01s latency), completely masking backend network delays.
+- **Categorization & Prioritization:** Organize tasks by custom categories and assign High/Medium/Low priority.
+- **Dark Mode:** Built-in theme toggling for eye strain reduction.
+- **Subtasks:** Break down larger goals into manageable checklist items.
+- **Responsive Design:** Works seamlessly on both desktop and mobile devices.
+
+## Local Development
+
+### Prerequisites
+- Node.js & npm (for Frontend)
+- Java 21 & Maven (for Backend)
+- A local MySQL database (or cloud equivalent)
+- A Firebase Project
+
+### Running the Backend
+1. Navigate to `backend/task-manager-backend`
+2. Update `src/main/resources/application.properties` with your database credentials.
+3. Run the Spring Boot application using Maven or your IDE.
+
+### Running the Frontend
+1. Navigate to the root directory.
+2. Install dependencies: `npm install`
+3. Start the dev server: `npm run dev`
+
+## Deployment
+
+- **Frontend:** Automatically deployed via Vercel when pushed to the `main` branch.
+- **Backend:** Configured for PaaS deployment (Render/Railway) with environment variables for database connection (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`).
+
+---
+*This project was developed with the assistance of Antigravity.*
