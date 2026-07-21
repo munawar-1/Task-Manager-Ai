@@ -264,6 +264,16 @@ function App() {
     }
   }
 
+  const moveTaskLeft = (task) => {
+    if (task.status === 'done') updateTaskStatus(task.id, 'in-process');
+    else if (task.status === 'in-process') updateTaskStatus(task.id, 'todo');
+  }
+
+  const moveTaskRight = (task) => {
+    if (task.status === 'todo') updateTaskStatus(task.id, 'in-process');
+    else if (task.status === 'in-process') updateTaskStatus(task.id, 'done');
+  }
+
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData('taskId', id)
   }
@@ -348,6 +358,17 @@ function App() {
       </div>
 
       <div className="task-actions">
+        {task.status !== 'todo' && (
+          <button className="action-btn mobile-move-btn" onClick={() => moveTaskLeft(task)} title="Move Left">
+            ‹
+          </button>
+        )}
+        {task.status !== 'done' && (
+          <button className="action-btn mobile-move-btn" onClick={() => moveTaskRight(task)} title="Move Right">
+            ›
+          </button>
+        )}
+        <div style={{ flex: 1 }}></div>
         <button
           className="delete-btn"
           onClick={() => setEditingTask(task)}

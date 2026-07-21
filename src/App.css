@@ -394,4 +394,13 @@ select.timeframe-input {
     gap: var(--space-4);
     border-bottom: none;
   }
+  .mobile-move-btn {
+    display: inline-block !important;
+    font-size: 1.5rem !important;
+    padding: 0 12px !important;
+    line-height: 1 !important;
+  }
+}
+.mobile-move-btn {
+  display: none;
 }
