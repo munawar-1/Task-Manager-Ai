@@ -147,7 +147,9 @@ function App() {
     e.preventDefault()
     if (!inputValue.trim() || !timeframeValue) return
 
+    const tempId = Date.now();
     const newTask = {
+      id: tempId,
       text: inputValue.trim(),
       type: activeTab,
       timeframe: timeframeValue,
@@ -155,76 +157,110 @@ function App() {
       priority: priorityValue,
       status: 'todo',
       createdAt: new Date().toISOString(),
-      completedAt: null
+      completedAt: null,
+      subtasks: []
     }
 
+    // Optimistic Update
+    setTasks(prev => [...prev, newTask]);
+    setInputValue('')
+    setCategoryValue('')
+    setTimeframeValue(getCurrentTimeframe(activeTab))
+
     try {
-      const createdTask = await api.createTask(newTask);
-      setTasks([...tasks, createdTask]);
-      setInputValue('')
-      setCategoryValue('')
-      setTimeframeValue(getCurrentTimeframe(activeTab))
+      // Background request
+      const createdTask = await api.createTask({
+        text: newTask.text,
+        type: newTask.type,
+        timeframe: newTask.timeframe,
+        category: newTask.category,
+        priority: newTask.priority,
+        status: newTask.status,
+        createdAt: newTask.createdAt,
+        completedAt: newTask.completedAt
+      });
+      // Replace temp task with real task
+      setTasks(prev => prev.map(t => t.id === tempId ? createdTask : t));
     } catch (error) {
       console.error("Failed to create task:", error);
+      // Revert if failed
+      setTasks(prev => prev.filter(t => t.id !== tempId));
     }
   }
 
   const updateTaskStatus = async (id, newStatus) => {
     const completedAt = newStatus === 'done' ? new Date().toISOString() : null;
+    
+    // Store old tasks in case we need to revert
+    const previousTasks = [...tasks];
+    
+    // Optimistic Update
+    setTasks(prevTasks => prevTasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, status: newStatus, completedAt };
+      }
+      return task;
+    }));
+
     try {
       await api.updateTask(id, { status: newStatus, completedAt });
-      setTasks(
-        tasks.map((task) => {
-          if (task.id === id) {
-            return { ...task, status: newStatus, completedAt };
-          }
-          return task;
-        })
-      )
     } catch (error) {
-      console.error("Failed to update task:", error);
+      console.error("Failed to update task status:", error);
+      // Revert UI on failure
+      setTasks(previousTasks);
     }
   }
 
   const updateTaskDetails = async (id, updatedData) => {
-    try {
-      if (updatedData.subtasks) {
-        const completedCount = updatedData.subtasks.filter(st => st.completed).length;
-        const totalCount = updatedData.subtasks.length;
-        if (totalCount > 0) {
-          if (completedCount === totalCount) {
-            updatedData.status = 'done';
-            updatedData.completedAt = new Date().toISOString();
-          } else if (completedCount > 0) {
-            updatedData.status = 'in-process';
-            updatedData.completedAt = null;
-          } else {
-            updatedData.status = 'todo';
-            updatedData.completedAt = null;
-          }
+    // Determine inferred status from subtasks
+    let processedData = { ...updatedData };
+    if (processedData.subtasks) {
+      const completedCount = processedData.subtasks.filter(st => st.completed).length;
+      const totalCount = processedData.subtasks.length;
+      if (totalCount > 0) {
+        if (completedCount === totalCount) {
+          processedData.status = 'done';
+          processedData.completedAt = new Date().toISOString();
+        } else if (completedCount > 0) {
+          processedData.status = 'in-process';
+          processedData.completedAt = null;
+        } else {
+          processedData.status = 'todo';
+          processedData.completedAt = null;
         }
       }
+    }
 
-      await api.updateTask(id, updatedData);
-      setTasks(
-        tasks.map((task) => {
-          if (task.id === id) {
-            return { ...task, ...updatedData };
-          }
-          return task;
-        })
-      );
+    const previousTasks = [...tasks];
+    
+    // Optimistic Update
+    setTasks(prevTasks => prevTasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, ...processedData };
+      }
+      return task;
+    }));
+
+    try {
+      await api.updateTask(id, processedData);
     } catch (error) {
       console.error("Failed to update task details:", error);
+      // Revert UI on failure
+      setTasks(previousTasks);
     }
   };
 
   const deleteTask = async (id) => {
+    const previousTasks = [...tasks];
+    // Optimistic update
+    setTasks(prevTasks => prevTasks.filter((task) => task.id !== id));
+
     try {
       await api.deleteTask(id);
-      setTasks(tasks.filter((task) => task.id !== id))
     } catch (error) {
       console.error("Failed to delete task:", error);
+      // Revert UI on failure
+      setTasks(previousTasks);
     }
   }
 
