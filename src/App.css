@@ -149,18 +149,20 @@
 
 .task-input {
   width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--input-border);
+  background: var(--bg-color);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
   font-size: 1.15rem;
-  padding: var(--space-2) 0;
+  padding: 12px 16px;
   color: var(--text-main);
-  transition: border-color 0.2s ease;
-  font-family: var(--font-heading);
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .task-input:focus {
-  border-bottom: 1px solid var(--primary-accent);
+  border-color: var(--primary-accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 .timeframe-input {
