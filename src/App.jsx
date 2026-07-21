@@ -14,8 +14,8 @@ const AddSubtaskForm = ({ onAdd }) => {
 
   if (!isAdding) {
     return (
-      <button 
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsAdding(true); }} 
+      <button
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsAdding(true); }}
         style={{ marginTop: '8px', background: 'transparent', color: 'var(--primary-color, #4a90e2)', border: '1px dashed #ccc', borderRadius: '4px', padding: '4px 8px', fontSize: '0.75rem', cursor: 'pointer', width: '100%', textAlign: 'center' }}
       >
         + Add Subtask
@@ -33,21 +33,21 @@ const AddSubtaskForm = ({ onAdd }) => {
         setIsAdding(false);
       }
     }} style={{ display: 'flex', marginTop: '8px', gap: '4px' }}>
-      <input 
+      <input
         autoFocus
         value={text}
         onChange={e => setText(e.target.value)}
-        placeholder="Enter subtask..." 
-        style={{ flex: 1, padding: '4px 6px', fontSize: '0.8rem', border: '1px solid #e2e8f0', borderRadius: '4px', background: 'var(--bg-secondary, #fff)', color: 'var(--text-primary, #333)' }} 
+        placeholder="Enter subtask..."
+        style={{ flex: 1, padding: '4px 6px', fontSize: '0.8rem', border: '1px solid #e2e8f0', borderRadius: '4px', background: 'var(--bg-secondary, #fff)', color: 'var(--text-primary, #333)' }}
         onClick={(e) => e.stopPropagation()}
         onBlur={() => {
-           if (!text.trim()) setIsAdding(false);
+          if (!text.trim()) setIsAdding(false);
         }}
         onKeyDown={(e) => {
-           if (e.key === 'Escape') {
-             setIsAdding(false);
-             setText('');
-           }
+          if (e.key === 'Escape') {
+            setIsAdding(false);
+            setText('');
+          }
         }}
       />
       <button type="submit" style={{ padding: '4px 8px', fontSize: '0.8rem', background: 'var(--primary-color, #4a90e2)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }} onClick={(e) => e.stopPropagation()}>Add</button>
@@ -274,9 +274,9 @@ function App() {
               {task.subtasks.map((st, index) => (
                 <div key={index} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', fontSize: '0.85rem', lineHeight: '1.2' }}>
                   <label style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', cursor: 'pointer', flex: 1 }} onClick={(e) => e.stopPropagation()}>
-                    <input 
-                      type="checkbox" 
-                      checked={st.completed} 
+                    <input
+                      type="checkbox"
+                      checked={st.completed}
                       onChange={(e) => {
                         const updatedSubtasks = [...task.subtasks];
                         updatedSubtasks[index] = { ...st, completed: e.target.checked };
@@ -288,7 +288,7 @@ function App() {
                       {st.text}
                     </span>
                   </label>
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();

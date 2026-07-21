@@ -106,7 +106,8 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -116,7 +117,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #root {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding: var(--space-5);
