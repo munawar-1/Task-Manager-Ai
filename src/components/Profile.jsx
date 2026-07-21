@@ -3,7 +3,7 @@ import { updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
 import './Profile.css';
 
-const Profile = ({ user }) => {
+const Profile = ({ user, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(user?.displayName || '');
@@ -83,6 +83,15 @@ const Profile = ({ user }) => {
                 onClick={() => setIsEditing(true)}
               >
                 Edit Profile
+              </button>
+              <button 
+                className="logout-btn" 
+                onClick={() => {
+                  setIsOpen(false);
+                  if (onLogout) onLogout();
+                }}
+              >
+                Logout
               </button>
             </div>
           ) : (

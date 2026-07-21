@@ -98,16 +98,28 @@
   font-family: var(--font-heading);
 }
 
+.profile-details {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .profile-details h3 {
   margin: 0 0 5px 0;
   font-size: 1.2rem;
   color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .profile-details p {
   margin: 0 0 15px 0;
   font-size: 0.95rem;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .edit-profile-btn {
@@ -125,6 +137,24 @@
 .edit-profile-btn:hover {
   border-color: var(--primary-accent);
   color: var(--primary-accent);
+}
+
+.logout-btn {
+  background: transparent;
+  color: var(--priority-high);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  margin-top: 10px;
+}
+
+.logout-btn:hover {
+  background: var(--priority-high-bg);
+  border-color: var(--priority-high);
 }
 
 /* Edit Form Styles */
