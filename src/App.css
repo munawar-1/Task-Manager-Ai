@@ -394,13 +394,38 @@ select.timeframe-input {
     gap: var(--space-4);
     border-bottom: none;
   }
-  .mobile-move-btn {
+  .mobile-action-btn {
     display: inline-block !important;
-    font-size: 1.5rem !important;
-    padding: 0 12px !important;
-    line-height: 1 !important;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .mobile-action-start {
+    background: #e0e7ff;
+    color: #4338ca;
+  }
+  .mobile-action-start:hover {
+    background: #c7d2fe;
+  }
+  .mobile-action-revert {
+    background: #f3f4f6;
+    color: #4b5563;
+  }
+  .mobile-action-revert:hover {
+    background: #e5e7eb;
+  }
+  .mobile-action-complete {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .mobile-action-complete:hover {
+    background: #bbf7d0;
   }
 }
-.mobile-move-btn {
+.mobile-action-btn {
   display: none;
 }

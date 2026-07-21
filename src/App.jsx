@@ -270,15 +270,7 @@ function App() {
     }
   }
 
-  const moveTaskLeft = (task) => {
-    if (task.status === 'done') updateTaskStatus(task.id, 'in-process');
-    else if (task.status === 'in-process') updateTaskStatus(task.id, 'todo');
-  }
 
-  const moveTaskRight = (task) => {
-    if (task.status === 'todo') updateTaskStatus(task.id, 'in-process');
-    else if (task.status === 'in-process') updateTaskStatus(task.id, 'done');
-  }
 
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData('taskId', id)
@@ -364,14 +356,24 @@ function App() {
       </div>
 
       <div className="task-actions">
-        {task.status !== 'todo' && (
-          <button className="action-btn mobile-move-btn" onClick={() => moveTaskLeft(task)} title="Move Left">
-            ‹
+        {task.status === 'todo' && (
+          <button className="mobile-action-btn mobile-action-start" onClick={() => updateTaskStatus(task.id, 'in-process')}>
+            Start Task →
           </button>
         )}
-        {task.status !== 'done' && (
-          <button className="action-btn mobile-move-btn" onClick={() => moveTaskRight(task)} title="Move Right">
-            ›
+        {task.status === 'in-process' && (
+          <>
+            <button className="mobile-action-btn mobile-action-revert" onClick={() => updateTaskStatus(task.id, 'todo')}>
+              ← Revert
+            </button>
+            <button className="mobile-action-btn mobile-action-complete" onClick={() => updateTaskStatus(task.id, 'done')}>
+              Complete ✓
+            </button>
+          </>
+        )}
+        {task.status === 'done' && (
+          <button className="mobile-action-btn mobile-action-revert" onClick={() => updateTaskStatus(task.id, 'in-process')}>
+            ← Revert
           </button>
         )}
         <div style={{ flex: 1 }}></div>
