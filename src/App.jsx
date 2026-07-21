@@ -4,6 +4,7 @@ import Reports from './Reports'
 import { api } from './api'
 import Auth from './components/Auth';
 import Profile from './components/Profile';
+import EditTaskModal from './components/EditTaskModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
@@ -65,6 +66,7 @@ function App() {
 
   const [activeTab, setActiveTab] = useState('daily')
   const [timeframeValue, setTimeframeValue] = useState(() => getCurrentTimeframe('daily'))
+  const [editingTask, setEditingTask] = useState(null)
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode')
     return saved ? JSON.parse(saved) : false
@@ -137,6 +139,22 @@ function App() {
     }
   }
 
+  const updateTaskDetails = async (id, updatedData) => {
+    try {
+      await api.updateTask(id, updatedData);
+      setTasks(
+        tasks.map((task) => {
+          if (task.id === id) {
+            return { ...task, ...updatedData };
+          }
+          return task;
+        })
+      );
+    } catch (error) {
+      console.error("Failed to update task details:", error);
+    }
+  };
+
   const deleteTask = async (id) => {
     try {
       await api.deleteTask(id);
@@ -177,8 +195,29 @@ function App() {
         )}
       </div>
       <p className="task-text">{task.text}</p>
+      
+      {task.subtasks && task.subtasks.length > 0 && (
+        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '-4px' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          {task.subtasks.filter(st => st.completed).length} / {task.subtasks.length} subtasks
+        </div>
+      )}
 
       <div className="task-actions">
+        <button
+          className="delete-btn"
+          onClick={() => setEditingTask(task)}
+          title="Edit task"
+          style={{ marginRight: '4px' }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
         <button
           className="delete-btn"
           onClick={() => deleteTask(task.id)}
@@ -194,10 +233,20 @@ function App() {
     </div>
   )
 
+  const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
+  const sortTasks = (tasksArr) => {
+    return [...tasksArr].sort((a, b) => {
+      const pA = priorityOrder[a.priority] || 0;
+      const pB = priorityOrder[b.priority] || 0;
+      if (pA !== pB) return pB - pA;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  };
+
   const activeTasks = tasks.filter(t => t.type === activeTab)
-  const todoTasks = activeTasks.filter(t => t.status === 'todo')
-  const inProcessTasks = activeTasks.filter(t => t.status === 'in-process')
-  const doneTasks = activeTasks.filter(t => t.status === 'done')
+  const todoTasks = sortTasks(activeTasks.filter(t => t.status === 'todo'))
+  const inProcessTasks = sortTasks(activeTasks.filter(t => t.status === 'in-process'))
+  const doneTasks = sortTasks(activeTasks.filter(t => t.status === 'done'))
 
   const getPlaceholderText = () => {
     switch (activeTab) {
@@ -310,11 +359,17 @@ function App() {
             <div className="add-task-row-2">
               <input
                 type="text"
+                list="category-options"
                 className="timeframe-input flex-grow"
                 placeholder="Category (e.g. Work)"
                 value={categoryValue}
                 onChange={(e) => setCategoryValue(e.target.value)}
               />
+              <datalist id="category-options">
+                {[...new Set(tasks.map(t => t.category).filter(Boolean))].map(cat => (
+                  <option key={cat} value={cat} />
+                ))}
+              </datalist>
 
               <select
                 className="timeframe-input"
@@ -363,13 +418,19 @@ function App() {
                 />
               )}
 
-              <button
-                type="submit"
-                className="add-button"
-                disabled={!inputValue.trim() || !timeframeValue}
+              <span 
+                title={(!inputValue.trim() || !timeframeValue) ? "Please fill in the main task name above" : "Add Task"}
+                style={{ display: 'inline-block', cursor: (!inputValue.trim() || !timeframeValue) ? 'not-allowed' : 'pointer' }}
               >
-                Add Task
-              </button>
+                <button
+                  type="submit"
+                  className="add-button"
+                  disabled={!inputValue.trim() || !timeframeValue}
+                  style={{ pointerEvents: (!inputValue.trim() || !timeframeValue) ? 'none' : 'auto' }}
+                >
+                  Add Task
+                </button>
+              </span>
             </div>
           </form>
 
@@ -437,6 +498,14 @@ function App() {
               </div>
             </div>
           </div>
+
+          {editingTask && (
+            <EditTaskModal 
+              task={editingTask} 
+              onClose={() => setEditingTask(null)}
+              onSave={updateTaskDetails}
+            />
+          )}
         </>
       )}
     </div>

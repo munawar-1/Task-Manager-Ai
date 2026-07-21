@@ -3,7 +3,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveCo
 import Heatmap from './components/Heatmap'
 import './Reports.css'
 
-const COLORS = ['#6366f1', '#34d399', '#f87171', '#fbbf24', '#a78bfa', '#60a5fa']
+const COLORS = ['#D96D55', '#799877', '#C6A664', '#C48484', '#6B7F91', '#C1B49A']
 
 export default function Reports({ tasks, activeTab, handleTabChange }) {
   const [notes, setNotes] = useState(() => {

@@ -46,6 +46,10 @@ public class Task {
     @JsonIgnore
     private User user;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "task_id")
+    private java.util.List<Subtask> subtasks = new java.util.ArrayList<>();
+
     // Constructors
     public Task() {}
 

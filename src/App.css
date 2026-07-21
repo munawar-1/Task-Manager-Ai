@@ -3,20 +3,23 @@
   flex-direction: column;
   gap: var(--space-4);
   height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--space-4);
 }
 
 .header-left h1 {
   font-size: 2rem;
-  font-weight: 700;
-  color: var(--primary-accent);
-  letter-spacing: -0.02em;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
 }
 
 .header-center {
@@ -36,48 +39,52 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-2);
-  border-radius: 50%;
+  border-radius: var(--radius-md);
   color: var(--text-muted);
   transition: all 0.2s ease;
+  background: transparent;
 }
 
 .theme-toggle:hover {
-  color: var(--primary-accent);
+  color: var(--text-main);
   background: var(--btn-hover-bg);
 }
 
 .view-toggle {
   display: flex;
-  background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  padding: 2px;
 }
 
 .toggle-btn {
   padding: 6px 16px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   color: var(--text-muted);
   background: transparent;
   transition: all 0.2s ease;
+  border-radius: var(--radius-sm);
 }
 
 .toggle-btn:hover {
-  background: var(--btn-hover-bg);
   color: var(--text-main);
 }
 
 .toggle-btn.active {
-  background: var(--primary-accent);
-  color: white;
+  background: var(--bg-color);
+  color: var(--text-main);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .welcome-text {
   color: var(--text-muted);
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-align: center;
   margin-bottom: var(--space-4);
+  font-style: italic;
+  font-family: var(--font-heading);
 }
 
 /* Tabs */
@@ -89,20 +96,19 @@
 
 .tabs-segmented-control {
   display: flex;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 99px;
-  padding: 4px;
+  gap: var(--space-5);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .tab-btn {
-  padding: 8px 24px;
-  border-radius: 99px;
-  font-weight: 600;
+  padding: 8px 4px;
+  font-weight: 500;
   font-size: 0.95rem;
   color: var(--text-muted);
   background: transparent;
   transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
 }
 
 .tab-btn:hover {
@@ -110,9 +116,8 @@
 }
 
 .tab-btn.active {
-  color: white;
-  background: var(--primary-accent);
-  box-shadow: var(--card-shadow);
+  color: var(--primary-accent);
+  border-bottom: 2px solid var(--primary-accent);
 }
 
 /* Task Input Container */
@@ -120,18 +125,15 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
   background: var(--card-bg);
-  padding: var(--space-4);
-  border-radius: 16px;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
   box-shadow: var(--card-shadow);
   border: 1px solid var(--border-color);
-  margin-bottom: var(--space-5);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.add-task-container:focus-within {
-  border-color: var(--primary-accent);
-  box-shadow: 0 0 0 2px rgba(124, 107, 255, 0.2);
 }
 
 .add-task-row-1 {
@@ -150,20 +152,27 @@
   width: 100%;
   background: transparent;
   border: none;
-  font-size: 1.1rem;
-  padding: var(--space-2);
+  border-bottom: 1px solid var(--input-border);
+  font-size: 1.15rem;
+  padding: var(--space-2) 0;
   color: var(--text-main);
+  transition: border-color 0.2s ease;
+  font-family: var(--font-heading);
+}
+
+.task-input:focus {
+  border-bottom: 1px solid var(--primary-accent);
 }
 
 .timeframe-input {
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 8px 12px;
   border: 1px solid var(--input-border);
-  background: var(--input-bg);
-  font-weight: 500;
+  background: var(--bg-color);
+  font-weight: 400;
   color: var(--text-main);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   transition: border-color 0.2s ease;
+  border-radius: var(--radius-sm);
 }
 
 .timeframe-input:focus {
@@ -180,21 +189,24 @@ select.timeframe-input {
 
 .add-button {
   background: var(--primary-accent);
-  color: white;
+  color: #FFFFFF;
   padding: 8px 24px;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-weight: 500;
   transition: all 0.2s ease;
+  border: 1px solid var(--primary-accent);
 }
 
 .add-button:hover:not(:disabled) {
   background: var(--primary-hover);
-  transform: translateY(-2px);
+  border-color: var(--primary-hover);
 }
 
 .add-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background: var(--text-muted);
+  border-color: var(--text-muted);
 }
 
 /* Board */
@@ -204,38 +216,38 @@ select.timeframe-input {
   flex-grow: 1;
   overflow-x: auto;
   padding-bottom: var(--space-4);
+  min-height: 0;
 }
 
 .column {
   flex: 1;
-  min-width: 320px;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  background: var(--column-bg);
-  padding: var(--space-4);
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
+  min-height: 0;
 }
 
 .column-header {
   font-size: 1.1rem;
-  font-weight: 600;
   color: var(--text-main);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .column-title {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  font-family: var(--font-heading);
 }
 
 .column-dot {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
 }
 
@@ -244,12 +256,8 @@ select.timeframe-input {
 .dot-done { background: var(--done-color); }
 
 .task-count {
-  background: var(--card-bg);
-  padding: 4px 10px;
-  border-radius: 99px;
   font-size: 0.85rem;
   color: var(--text-muted);
-  border: 1px solid var(--border-color);
 }
 
 .task-list {
@@ -257,19 +265,22 @@ select.timeframe-input {
   flex-direction: column;
   gap: var(--space-3);
   min-height: 100px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 /* Cards */
 .task-card {
   background: var(--task-card-bg);
   padding: var(--space-4);
-  border-radius: 12px;
-  box-shadow: var(--card-shadow);
+  border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   transition: all 0.2s ease;
   border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
   cursor: grab;
 }
 
@@ -278,9 +289,9 @@ select.timeframe-input {
 }
 
 .task-card:hover {
-  transform: translateY(-2px);
+  border-color: var(--task-card-hover-border);
   box-shadow: var(--hover-shadow);
-  border-color: var(--primary-accent);
+  transform: translateY(-1px);
 }
 
 .task-header {
@@ -291,41 +302,41 @@ select.timeframe-input {
 
 .type-badge {
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
+  font-weight: 500;
   color: var(--text-muted);
-  background: var(--btn-hover-bg);
-  border: 1px solid var(--border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .priority-badge {
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
-  text-transform: uppercase;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--btn-hover-bg);
 }
 
 .priority-low {
-  background: var(--priority-low-bg);
   color: var(--priority-low);
+  background: var(--priority-low-bg);
 }
 
 .priority-medium {
-  background: var(--priority-medium-bg);
   color: var(--priority-medium);
+  background: var(--priority-medium-bg);
 }
 
 .priority-high {
-  background: var(--priority-high-bg);
   color: var(--priority-high);
+  background: var(--priority-high-bg);
 }
 
 .task-text {
   font-size: 1.05rem;
-  font-weight: 500;
+  font-weight: 400;
   word-break: break-word;
+  color: var(--text-main);
+  line-height: 1.5;
 }
 
 .task-actions {
@@ -336,13 +347,13 @@ select.timeframe-input {
 .delete-btn {
   color: var(--text-muted);
   padding: var(--space-1);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   transition: all 0.2s ease;
 }
 
 .delete-btn:hover {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
+  color: var(--priority-high);
+  background: var(--priority-high-bg);
 }
 
 .empty-column {
@@ -351,6 +362,22 @@ select.timeframe-input {
   font-size: 0.95rem;
   padding: 2rem 0;
   font-style: italic;
+  font-family: var(--font-heading);
+}
+
+.action-btn {
+  padding: 6px 16px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: transparent;
+  transition: all 0.2s ease;
+  border-radius: var(--radius-sm);
+}
+
+.action-btn:hover {
+  color: var(--text-main);
+  background: var(--btn-hover-bg);
 }
 
 @media (max-width: 768px) {
@@ -363,5 +390,6 @@ select.timeframe-input {
   .header {
     flex-direction: column;
     gap: var(--space-4);
+    border-bottom: none;
   }
 }

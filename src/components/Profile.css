@@ -4,9 +4,8 @@
 }
 
 .profile-avatar-btn {
-  background: var(--bg-color);
-  border: 2px solid var(--primary-color);
-  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--border-color);
   width: 40px;
   height: 40px;
   padding: 0;
@@ -16,11 +15,11 @@
   cursor: pointer;
   transition: all 0.2s ease;
   overflow: hidden;
+  border-radius: var(--radius-lg);
 }
 
 .profile-avatar-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
+  border-color: var(--primary-accent);
 }
 
 .profile-img {
@@ -30,9 +29,10 @@
 }
 
 .profile-initials {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--primary-color);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-main);
+  font-family: var(--font-heading);
 }
 
 .profile-backdrop {
@@ -51,12 +51,12 @@
   top: 50px;
   right: 0;
   background: var(--card-bg);
-  border-radius: 12px;
-  box-shadow: var(--hover-shadow);
   width: 280px;
-  padding: 20px;
+  padding: 24px;
   z-index: 9999;
   border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--hover-shadow);
   animation: slideDown 0.2s ease;
 }
 
@@ -73,72 +73,72 @@
 }
 
 .profile-header {
-  margin-bottom: 15px;
+  margin-bottom: var(--space-4);
 }
 
 .profile-img-large {
   width: 80px;
   height: 80px;
-  border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--primary-color);
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
 }
 
 .profile-initials-large {
   width: 80px;
   height: 80px;
+  border: 1px solid var(--border-color);
   border-radius: 50%;
-  background: var(--primary-color);
-  color: white;
+  background: var(--btn-hover-bg);
+  color: var(--text-main);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
-  font-weight: bold;
+  font-size: 2.2rem;
+  font-family: var(--font-heading);
 }
 
 .profile-details h3 {
   margin: 0 0 5px 0;
   font-size: 1.2rem;
-  color: var(--text-color);
+  color: var(--text-main);
 }
 
 .profile-details p {
   margin: 0 0 15px 0;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--text-muted);
 }
 
 .edit-profile-btn {
-  background: var(--bg-color);
-  color: var(--text-color);
+  background: transparent;
+  color: var(--text-main);
   border: 1px solid var(--border-color);
   padding: 8px 16px;
-  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.2s;
   width: 100%;
+  border-radius: var(--radius-sm);
 }
 
 .edit-profile-btn:hover {
-  background: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
 }
 
 /* Edit Form Styles */
 .profile-edit-form h4 {
   margin: 0 0 15px 0;
-  color: var(--text-color);
+  color: var(--text-main);
   text-align: center;
 }
 
 .profile-error {
-  background: rgba(231, 76, 60, 0.1);
-  color: #e74c3c;
+  background: var(--priority-high-bg);
+  color: var(--priority-high);
+  border-radius: var(--radius-sm);
   padding: 10px;
-  border-radius: 6px;
   font-size: 0.85rem;
   margin-bottom: 15px;
   text-align: center;
@@ -146,29 +146,30 @@
 
 .profile-edit-form .form-group {
   margin-bottom: 15px;
+  text-align: left;
 }
 
 .profile-edit-form label {
   display: block;
   font-size: 0.85rem;
   margin-bottom: 5px;
-  color: var(--text-color);
+  color: var(--text-muted);
 }
 
 .profile-edit-form input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--bg-color);
-  color: var(--text-color);
-  font-size: 0.9rem;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-size: 0.95rem;
   box-sizing: border-box;
+  transition: border-color 0.2s ease;
 }
 
 .profile-edit-form input:focus {
-  outline: none;
-  border-color: var(--primary-color);
+  border-color: var(--primary-accent);
 }
 
 .profile-form-actions {
@@ -180,33 +181,36 @@
 .profile-form-actions button {
   flex: 1;
   padding: 8px;
-  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
-  border: none;
+  border: 1px solid transparent;
   transition: all 0.2s;
+  border-radius: var(--radius-sm);
 }
 
 .cancel-btn {
-  background: var(--bg-color);
-  color: var(--text-color);
-  border: 1px solid var(--border-color) !important;
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border-color) !important;
 }
 
 .cancel-btn:hover {
-  background: var(--border-color);
+  color: var(--text-main);
+  background: var(--btn-hover-bg);
 }
 
 .save-btn {
-  background: var(--primary-color);
-  color: white;
+  background: var(--primary-accent);
+  color: #FFF;
+  border-color: var(--primary-accent) !important;
 }
 
 .save-btn:hover:not(:disabled) {
-  background: #357abd;
+  background: var(--primary-hover);
+  border-color: var(--primary-hover) !important;
 }
 
 .save-btn:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
 }
