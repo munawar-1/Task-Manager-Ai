@@ -1,68 +1,85 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #f3f4f6;
-  --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-  --text-main: #1f2937;
-  --text-muted: #6b7280;
-  --card-bg: rgba(255, 255, 255, 0.7);
-  --card-border: rgba(255, 255, 255, 0.5);
-  --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-  --primary-accent: #6366f1; /* Indigo */
-  --primary-hover: #4f46e5;
-  --todo-border: #e5e7eb;
-  --in-process-border: #60a5fa;
-  --done-border: #34d399;
+  /* Default: Light Theme */
+  --bg-color: #F8FAFC;
+  --bg-gradient: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+  --card-bg: #FFFFFF;
+  --border-color: #E2E8F0;
   
-  /* Component specific variables */
-  --input-bg: white;
-  --input-border: #e5e7eb;
-  --column-bg: rgba(249, 250, 251, 0.5);
-  --task-card-bg: white;
-  --task-card-hover-border: #f3f4f6;
-  --btn-hover-bg: rgba(255, 255, 255, 0.5);
-  --action-btn-bg: #f3f4f6;
-  --delete-btn-hover-bg: #fee2e2;
+  --primary-accent: #7C6BFF;
+  --primary-hover: #6350E5;
   
-  --badge-daily-bg: #fee2e2;
-  --badge-daily-text: #ef4444;
-  --badge-monthly-bg: #e0e7ff;
-  --badge-monthly-text: #4f46e5;
-  --badge-yearly-bg: #dcfce7;
-  --badge-yearly-text: #16a34a;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  
+  --column-bg: rgba(241, 245, 249, 0.6);
+  --task-card-bg: #FFFFFF;
+  --task-card-hover-border: #CBD5E1;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  --btn-hover-bg: rgba(15, 23, 42, 0.05);
+  --input-bg: #FFFFFF;
+  --input-border: #E2E8F0;
+  
+  /* Status Colors */
+  --priority-low: #16A34A;
+  --priority-low-bg: #DCFCE7;
+  --priority-medium: #D97706;
+  --priority-medium-bg: #FEF3C7;
+  --priority-high: #DC2626;
+  --priority-high-bg: #FEE2E2;
+  
+  --todo-color: #94A3B8;
+  --in-process-color: #7C6BFF;
+  --done-color: #16A34A;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-8: 48px;
 
   --font-family: 'Outfit', sans-serif;
 }
 
 [data-theme='dark'] {
-  --bg-color: #0A0A0B;
-  --bg-gradient: radial-gradient(circle at 50% 0%, #1A1A24 0%, #0A0A0B 100%);
-  --text-main: #FFFFFF;
-  --text-muted: #A0A0AB;
-  --card-bg: rgba(26, 26, 36, 0.6);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --primary-accent: #9b87f5;
-  --primary-hover: #7E69AB;
-  --todo-border: rgba(255, 255, 255, 0.1);
-  --in-process-border: #0EA5E9;
-  --done-border: #10B981;
+  --bg-color: #0F1117;
+  --bg-gradient: #0F1117;
+  --card-bg: #1A1D27;
+  --border-color: #2A2D3A;
   
-  --input-bg: rgba(0, 0, 0, 0.3);
-  --input-border: rgba(255, 255, 255, 0.1);
-  --column-bg: rgba(20, 20, 28, 0.5);
-  --task-card-bg: rgba(35, 35, 45, 0.7);
-  --task-card-hover-border: rgba(155, 135, 245, 0.5);
+  --primary-accent: #7C6BFF;
+  --primary-hover: #9688FF;
+  
+  --text-main: #F2F3F7;
+  --text-muted: #9599AA;
+  
+  --column-bg: rgba(26, 29, 39, 0.6);
+  --task-card-bg: #1A1D27;
+  --task-card-hover-border: #3A3D4A;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+
   --btn-hover-bg: rgba(255, 255, 255, 0.05);
-  --action-btn-bg: rgba(255, 255, 255, 0.05);
-  --delete-btn-hover-bg: rgba(239, 68, 68, 0.15);
+  --input-bg: #1A1D27;
+  --input-border: #2A2D3A;
   
-  --badge-daily-bg: rgba(239, 68, 68, 0.15);
-  --badge-daily-text: #FCA5A5;
-  --badge-monthly-bg: rgba(155, 135, 245, 0.15);
-  --badge-monthly-text: #D6BCFA;
-  --badge-yearly-bg: rgba(16, 185, 129, 0.15);
-  --badge-yearly-text: #6EE7B7;
+  /* Status Colors */
+  --priority-low: #4ADE80;
+  --priority-low-bg: rgba(74, 222, 128, 0.15);
+  --priority-medium: #FBBF24;
+  --priority-medium-bg: rgba(251, 191, 36, 0.15);
+  --priority-high: #F87171;
+  --priority-high-bg: rgba(248, 113, 113, 0.15);
+
+  --todo-color: #9599AA;
+  --in-process-color: #7C6BFF;
+  --done-color: #4ADE80;
 }
 
 * {
@@ -85,7 +102,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: var(--space-5);
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -120,10 +137,10 @@ input::placeholder {
 }
  
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1; 
+  background: var(--border-color); 
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8; 
+  background: var(--text-muted); 
 }

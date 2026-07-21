@@ -235,9 +235,11 @@ function App() {
   return (
     <div className="app-container">
       <header className="header">
-        <div className="header-content">
+        <div className="header-left">
           <h1>Workspace</h1>
+        </div>
 
+        <div className="header-center">
           <div className="view-toggle">
             <button
               className={`toggle-btn ${viewMode === 'board' ? 'active' : ''}`}
@@ -252,41 +254,43 @@ function App() {
               Reports
             </button>
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <button className="theme-toggle" onClick={toggleDarkMode} title="Toggle Dark Mode" style={{marginLeft: '10px'}}>
-              {isDarkMode ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-              )}
-            </button>
-            <button onClick={handleLogout} className="action-btn" style={{marginLeft: '15px'}}>Logout</button>
-            <Profile user={user} />
-          </div>
         </div>
-        <p>Welcome back, {user.displayName || user.email.split('@')[0] || 'User'}! Organize your day.</p>
+
+        <div className="header-right">
+          <button className="theme-toggle" onClick={toggleDarkMode} title="Toggle Dark Mode">
+            {isDarkMode ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            )}
+          </button>
+          <Profile user={user} onLogout={handleLogout} />
+        </div>
       </header>
+      
+      <p className="welcome-text">Welcome back, {user.displayName || user.email.split('@')[0] || 'User'}! Organize your day.</p>
 
       <div className="tabs-container">
-        <button
-          className={`tab-btn ${activeTab === 'daily' ? 'active' : ''}`}
-          onClick={() => handleTabChange('daily')}
-        >
-          Daily Tasks
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'monthly' ? 'active' : ''}`}
-          onClick={() => handleTabChange('monthly')}
-        >
-          Monthly Targets
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'yearly' ? 'active' : ''}`}
-          onClick={() => handleTabChange('yearly')}
-        >
-          Yearly Goals
-        </button>
+        <div className="tabs-segmented-control">
+          <button
+            className={`tab-btn ${activeTab === 'daily' ? 'active' : ''}`}
+            onClick={() => handleTabChange('daily')}
+          >
+            Daily Tasks
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'monthly' ? 'active' : ''}`}
+            onClick={() => handleTabChange('monthly')}
+          >
+            Monthly Targets
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'yearly' ? 'active' : ''}`}
+            onClick={() => handleTabChange('yearly')}
+          >
+            Yearly Goals
+          </button>
+        </div>
       </div>
 
       {viewMode === 'reports' ? (
@@ -294,77 +298,79 @@ function App() {
       ) : (
         <>
           <form onSubmit={handleAddTask} className="add-task-container">
-            <input
-              type="text"
-              className="task-input"
-              placeholder={getPlaceholderText()}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <input
-              type="text"
-              className="timeframe-input"
-              placeholder="Category (e.g. Work)"
-              value={categoryValue}
-              onChange={(e) => setCategoryValue(e.target.value)}
-              style={{ width: '130px' }}
-            />
-
-            <select
-              className="timeframe-input"
-              value={priorityValue}
-              onChange={(e) => setPriorityValue(e.target.value)}
-              style={{ width: '100px' }}
-            >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-
-            {activeTab === 'daily' && (
+            <div className="add-task-row-1">
               <input
-                type="date"
-                className="timeframe-input"
-                value={timeframeValue}
-                onChange={(e) => setTimeframeValue(e.target.value)}
-                required
+                type="text"
+                className="task-input"
+                placeholder={getPlaceholderText()}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
               />
-            )}
+            </div>
+            <div className="add-task-row-2">
+              <input
+                type="text"
+                className="timeframe-input flex-grow"
+                placeholder="Category (e.g. Work)"
+                value={categoryValue}
+                onChange={(e) => setCategoryValue(e.target.value)}
+              />
 
-            {activeTab === 'monthly' && (
               <select
                 className="timeframe-input"
-                value={timeframeValue}
-                onChange={(e) => setTimeframeValue(e.target.value)}
-                required
+                value={priorityValue}
+                onChange={(e) => setPriorityValue(e.target.value)}
               >
-                <option value="" disabled>Select Month</option>
-                {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
-                  <option key={month} value={month}>{month}</option>
-                ))}
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
               </select>
-            )}
 
-            {activeTab === 'yearly' && (
-              <input
-                type="number"
-                className="timeframe-input"
-                placeholder="Year (e.g. 2024)"
-                value={timeframeValue}
-                onChange={(e) => setTimeframeValue(e.target.value)}
-                required
-                min="2024"
-                max="2100"
-              />
-            )}
+              {activeTab === 'daily' && (
+                <input
+                  type="date"
+                  className="timeframe-input"
+                  value={timeframeValue}
+                  onChange={(e) => setTimeframeValue(e.target.value)}
+                  required
+                />
+              )}
 
-            <button
-              type="submit"
-              className="add-button"
-              disabled={!inputValue.trim() || !timeframeValue}
-            >
-              Add
-            </button>
+              {activeTab === 'monthly' && (
+                <select
+                  className="timeframe-input"
+                  value={timeframeValue}
+                  onChange={(e) => setTimeframeValue(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>Select Month</option>
+                  {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
+                    <option key={month} value={month}>{month}</option>
+                  ))}
+                </select>
+              )}
+
+              {activeTab === 'yearly' && (
+                <input
+                  type="number"
+                  className="timeframe-input"
+                  placeholder="Year (e.g. 2024)"
+                  value={timeframeValue}
+                  onChange={(e) => setTimeframeValue(e.target.value)}
+                  required
+                  min="2024"
+                  max="2100"
+                />
+              )}
+
+              <button
+                type="submit"
+                className="add-button"
+                disabled={!inputValue.trim() || !timeframeValue}
+              >
+                Add Task
+              </button>
+            </div>
           </form>
 
           <div className="board">
@@ -374,7 +380,10 @@ function App() {
               onDrop={(e) => handleDrop(e, 'todo')}
             >
               <div className="column-header">
-                To Do
+                <div className="column-title">
+                  <span className="column-dot dot-todo"></span>
+                  To Do
+                </div>
                 <span className="task-count">{todoTasks.length}</span>
               </div>
               <div className="task-list">
@@ -392,7 +401,10 @@ function App() {
               onDrop={(e) => handleDrop(e, 'in-process')}
             >
               <div className="column-header">
-                In Process
+                <div className="column-title">
+                  <span className="column-dot dot-in-process"></span>
+                  In Process
+                </div>
                 <span className="task-count">{inProcessTasks.length}</span>
               </div>
               <div className="task-list">
@@ -410,7 +422,10 @@ function App() {
               onDrop={(e) => handleDrop(e, 'done')}
             >
               <div className="column-header">
-                Done
+                <div className="column-title">
+                  <span className="column-dot dot-done"></span>
+                  Done
+                </div>
                 <span className="task-count">{doneTasks.length}</span>
               </div>
               <div className="task-list">

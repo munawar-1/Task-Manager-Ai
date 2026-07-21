@@ -315,13 +315,13 @@ export default function Reports({ tasks, activeTab, handleTabChange }) {
         
         <div className="report-section">
           <div className="report-card">
-            <h3>H1 vs H2 Growth</h3>
+            <h3>First Half vs Second Half</h3>
             <div className="chart-container">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={h1h2Data}>
                   <XAxis dataKey="name" stroke="var(--text-muted)" />
                   <Tooltip />
-                  <Bar dataKey="completed" fill="var(--done-border)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="completed" fill="var(--primary-accent)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

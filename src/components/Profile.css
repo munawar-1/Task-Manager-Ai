@@ -35,18 +35,29 @@
   color: var(--primary-color);
 }
 
+.profile-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9998;
+  backdrop-filter: blur(2px);
+}
+
 .profile-dropdown {
   position: absolute;
   top: 50px;
   right: 0;
   background: var(--card-bg);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: var(--hover-shadow);
   width: 280px;
   padding: 20px;
-  z-index: 100;
+  z-index: 9999;
   border: 1px solid var(--border-color);
-  animation: slideDown 0.3s ease;
+  animation: slideDown 0.2s ease;
 }
 
 @keyframes slideDown {

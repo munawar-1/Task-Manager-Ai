@@ -10,6 +10,7 @@ const Profile = ({ user }) => {
   const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [imgError, setImgError] = useState(false);
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
@@ -43,24 +44,36 @@ const Profile = ({ user }) => {
         onClick={() => setIsOpen(!isOpen)}
         title="Account Details"
       >
-        {user?.photoURL ? (
-          <img src={user.photoURL} alt="Profile" className="profile-img" />
+        {user?.photoURL && !imgError ? (
+          <img 
+            src={user.photoURL} 
+            alt="Profile" 
+            className="profile-img" 
+            onError={() => setImgError(true)}
+          />
         ) : (
           <div className="profile-initials">{getInitials()}</div>
         )}
       </button>
 
       {isOpen && (
-        <div className="profile-dropdown">
-          {!isEditing ? (
-            <div className="profile-info">
-              <div className="profile-header">
-                {user?.photoURL ? (
-                  <img src={user.photoURL} alt="Profile" className="profile-img-large" />
-                ) : (
-                  <div className="profile-initials-large">{getInitials()}</div>
-                )}
-              </div>
+        <>
+          <div className="profile-backdrop" onClick={() => setIsOpen(false)}></div>
+          <div className="profile-dropdown">
+            {!isEditing ? (
+              <div className="profile-info">
+                <div className="profile-header">
+                  {user?.photoURL && !imgError ? (
+                    <img 
+                      src={user.photoURL} 
+                      alt="Profile" 
+                      className="profile-img-large" 
+                      onError={() => setImgError(true)}
+                    />
+                  ) : (
+                    <div className="profile-initials-large">{getInitials()}</div>
+                  )}
+                </div>
               <div className="profile-details">
                 <h3>{user?.displayName || 'No Name Set'}</h3>
                 <p>{user?.email}</p>
@@ -109,6 +122,7 @@ const Profile = ({ user }) => {
             </form>
           )}
         </div>
+        </>
       )}
     </div>
   );
