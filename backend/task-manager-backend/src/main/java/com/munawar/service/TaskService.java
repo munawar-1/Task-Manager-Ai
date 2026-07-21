@@ -65,6 +65,10 @@ public class TaskService implements ITaskService{
             existingTask.setStatus(task.getStatus());
             existingTask.setCompletedAt(task.getCompletedAt());
         }
+        if (task.getSubtasks() != null) {
+            existingTask.getSubtasks().clear();
+            existingTask.getSubtasks().addAll(task.getSubtasks());
+        }
         
         return repo.save(existingTask);
     }

@@ -4,8 +4,56 @@ import Reports from './Reports'
 import { api } from './api'
 import Auth from './components/Auth';
 import Profile from './components/Profile';
+import EditTaskModal from './components/EditTaskModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+
+const AddSubtaskForm = ({ onAdd }) => {
+  const [isAdding, setIsAdding] = useState(false);
+  const [text, setText] = useState('');
+
+  if (!isAdding) {
+    return (
+      <button
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsAdding(true); }}
+        style={{ marginTop: '8px', background: 'transparent', color: 'var(--primary-color, #4a90e2)', border: '1px dashed #ccc', borderRadius: '4px', padding: '4px 8px', fontSize: '0.75rem', cursor: 'pointer', width: '100%', textAlign: 'center' }}
+      >
+        + Add Subtask
+      </button>
+    );
+  }
+
+  return (
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (text.trim()) {
+        onAdd(text.trim());
+        setText('');
+        setIsAdding(false);
+      }
+    }} style={{ display: 'flex', marginTop: '8px', gap: '4px' }}>
+      <input
+        autoFocus
+        value={text}
+        onChange={e => setText(e.target.value)}
+        placeholder="Enter subtask..."
+        style={{ flex: 1, padding: '4px 6px', fontSize: '0.8rem', border: '1px solid #e2e8f0', borderRadius: '4px', background: 'var(--bg-secondary, #fff)', color: 'var(--text-primary, #333)' }}
+        onClick={(e) => e.stopPropagation()}
+        onBlur={() => {
+          if (!text.trim()) setIsAdding(false);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            setIsAdding(false);
+            setText('');
+          }
+        }}
+      />
+      <button type="submit" style={{ padding: '4px 8px', fontSize: '0.8rem', background: 'var(--primary-color, #4a90e2)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }} onClick={(e) => e.stopPropagation()}>Add</button>
+    </form>
+  );
+};
 
 function App() {
   const [user, setUser] = useState(null);
@@ -22,7 +70,7 @@ function App() {
 
   useEffect(() => {
     if (!user) return;
-    
+
     const loadTasks = async () => {
       try {
         const data = await api.getTasks();
@@ -44,7 +92,7 @@ function App() {
   const [categoryValue, setCategoryValue] = useState('')
   const [priorityValue, setPriorityValue] = useState('Medium')
   const [viewMode, setViewMode] = useState('board') // 'board', 'reports'
-  
+
   const getCurrentTimeframe = (tab) => {
     const now = new Date()
     if (tab === 'daily') {
@@ -65,6 +113,7 @@ function App() {
 
   const [activeTab, setActiveTab] = useState('daily')
   const [timeframeValue, setTimeframeValue] = useState(() => getCurrentTimeframe('daily'))
+  const [editingTask, setEditingTask] = useState(null)
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode')
     return saved ? JSON.parse(saved) : false
@@ -137,6 +186,39 @@ function App() {
     }
   }
 
+  const updateTaskDetails = async (id, updatedData) => {
+    try {
+      if (updatedData.subtasks) {
+        const completedCount = updatedData.subtasks.filter(st => st.completed).length;
+        const totalCount = updatedData.subtasks.length;
+        if (totalCount > 0) {
+          if (completedCount === totalCount) {
+            updatedData.status = 'done';
+            updatedData.completedAt = new Date().toISOString();
+          } else if (completedCount > 0) {
+            updatedData.status = 'in-process';
+            updatedData.completedAt = null;
+          } else {
+            updatedData.status = 'todo';
+            updatedData.completedAt = null;
+          }
+        }
+      }
+
+      await api.updateTask(id, updatedData);
+      setTasks(
+        tasks.map((task) => {
+          if (task.id === id) {
+            return { ...task, ...updatedData };
+          }
+          return task;
+        })
+      );
+    } catch (error) {
+      console.error("Failed to update task details:", error);
+    }
+  };
+
   const deleteTask = async (id) => {
     try {
       await api.deleteTask(id);
@@ -178,7 +260,69 @@ function App() {
       </div>
       <p className="task-text">{task.text}</p>
 
+      <div className="task-subtasks-preview" style={{ marginTop: '8px' }}>
+        {task.subtasks && task.subtasks.length > 0 && (
+          <>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              {task.subtasks.filter(st => st.completed).length} / {task.subtasks.length} subtasks
+            </div>
+            <div className="subtasks-list-preview" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {task.subtasks.map((st, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', fontSize: '0.85rem', lineHeight: '1.2' }}>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', cursor: 'pointer', flex: 1 }} onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={st.completed}
+                      onChange={(e) => {
+                        const updatedSubtasks = [...task.subtasks];
+                        updatedSubtasks[index] = { ...st, completed: e.target.checked };
+                        updateTaskDetails(task.id, { subtasks: updatedSubtasks });
+                      }}
+                      style={{ cursor: 'pointer', marginTop: '2px' }}
+                    />
+                    <span style={{ textDecoration: st.completed ? 'line-through' : 'none', color: st.completed ? 'var(--text-muted)' : 'inherit', wordBreak: 'break-word' }}>
+                      {st.text}
+                    </span>
+                  </label>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const updatedSubtasks = task.subtasks.filter((_, i) => i !== index);
+                      updateTaskDetails(task.id, { subtasks: updatedSubtasks });
+                    }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999', fontSize: '1.1rem', lineHeight: '1', padding: '0 4px' }}
+                    title="Delete subtask"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        <AddSubtaskForm onAdd={(text) => {
+          const updatedSubtasks = [...(task.subtasks || []), { text, completed: false }];
+          updateTaskDetails(task.id, { subtasks: updatedSubtasks });
+        }} />
+      </div>
+
       <div className="task-actions">
+        <button
+          className="delete-btn"
+          onClick={() => setEditingTask(task)}
+          title="Edit task"
+          style={{ marginRight: '4px' }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
         <button
           className="delete-btn"
           onClick={() => deleteTask(task.id)}
@@ -194,10 +338,20 @@ function App() {
     </div>
   )
 
+  const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
+  const sortTasks = (tasksArr) => {
+    return [...tasksArr].sort((a, b) => {
+      const pA = priorityOrder[a.priority] || 0;
+      const pB = priorityOrder[b.priority] || 0;
+      if (pA !== pB) return pB - pA;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  };
+
   const activeTasks = tasks.filter(t => t.type === activeTab)
-  const todoTasks = activeTasks.filter(t => t.status === 'todo')
-  const inProcessTasks = activeTasks.filter(t => t.status === 'in-process')
-  const doneTasks = activeTasks.filter(t => t.status === 'done')
+  const todoTasks = sortTasks(activeTasks.filter(t => t.status === 'todo'))
+  const inProcessTasks = sortTasks(activeTasks.filter(t => t.status === 'in-process'))
+  const doneTasks = sortTasks(activeTasks.filter(t => t.status === 'done'))
 
   const getPlaceholderText = () => {
     switch (activeTab) {
@@ -227,7 +381,7 @@ function App() {
             </button>
           </div>
         </header>
-        <Auth onLoginSuccess={() => {}} />
+        <Auth onLoginSuccess={() => { }} />
       </div>
     );
   }
@@ -235,9 +389,11 @@ function App() {
   return (
     <div className="app-container">
       <header className="header">
-        <div className="header-content">
+        <div className="header-left">
           <h1>Workspace</h1>
+        </div>
 
+        <div className="header-center">
           <div className="view-toggle">
             <button
               className={`toggle-btn ${viewMode === 'board' ? 'active' : ''}`}
@@ -252,41 +408,43 @@ function App() {
               Reports
             </button>
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <button className="theme-toggle" onClick={toggleDarkMode} title="Toggle Dark Mode" style={{marginLeft: '10px'}}>
-              {isDarkMode ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-              )}
-            </button>
-            <button onClick={handleLogout} className="action-btn" style={{marginLeft: '15px'}}>Logout</button>
-            <Profile user={user} />
-          </div>
         </div>
-        <p>Welcome back, {user.displayName || user.email.split('@')[0] || 'User'}! Organize your day.</p>
+
+        <div className="header-right">
+          <button className="theme-toggle" onClick={toggleDarkMode} title="Toggle Dark Mode">
+            {isDarkMode ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            )}
+          </button>
+          <Profile user={user} onLogout={handleLogout} />
+        </div>
       </header>
 
+      <p className="welcome-text">Welcome back, {user.displayName || user.email.split('@')[0] || 'User'}! Organize your day.</p>
+
       <div className="tabs-container">
-        <button
-          className={`tab-btn ${activeTab === 'daily' ? 'active' : ''}`}
-          onClick={() => handleTabChange('daily')}
-        >
-          Daily Tasks
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'monthly' ? 'active' : ''}`}
-          onClick={() => handleTabChange('monthly')}
-        >
-          Monthly Targets
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'yearly' ? 'active' : ''}`}
-          onClick={() => handleTabChange('yearly')}
-        >
-          Yearly Goals
-        </button>
+        <div className="tabs-segmented-control">
+          <button
+            className={`tab-btn ${activeTab === 'daily' ? 'active' : ''}`}
+            onClick={() => handleTabChange('daily')}
+          >
+            Daily Tasks
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'monthly' ? 'active' : ''}`}
+            onClick={() => handleTabChange('monthly')}
+          >
+            Monthly Targets
+          </button>
+          <button
+            className={`tab-btn ${activeTab === 'yearly' ? 'active' : ''}`}
+            onClick={() => handleTabChange('yearly')}
+          >
+            Yearly Goals
+          </button>
+        </div>
       </div>
 
       {viewMode === 'reports' ? (
@@ -294,77 +452,91 @@ function App() {
       ) : (
         <>
           <form onSubmit={handleAddTask} className="add-task-container">
-            <input
-              type="text"
-              className="task-input"
-              placeholder={getPlaceholderText()}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <input
-              type="text"
-              className="timeframe-input"
-              placeholder="Category (e.g. Work)"
-              value={categoryValue}
-              onChange={(e) => setCategoryValue(e.target.value)}
-              style={{ width: '130px' }}
-            />
-
-            <select
-              className="timeframe-input"
-              value={priorityValue}
-              onChange={(e) => setPriorityValue(e.target.value)}
-              style={{ width: '100px' }}
-            >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-
-            {activeTab === 'daily' && (
+            <div className="add-task-row-1">
               <input
-                type="date"
-                className="timeframe-input"
-                value={timeframeValue}
-                onChange={(e) => setTimeframeValue(e.target.value)}
-                required
+                type="text"
+                className="task-input"
+                placeholder={getPlaceholderText()}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
               />
-            )}
+            </div>
+            <div className="add-task-row-2">
+              <input
+                type="text"
+                list="category-options"
+                className="timeframe-input flex-grow"
+                placeholder="Category (e.g. Work)"
+                value={categoryValue}
+                onChange={(e) => setCategoryValue(e.target.value)}
+              />
+              <datalist id="category-options">
+                {[...new Set(tasks.map(t => t.category).filter(Boolean))].map(cat => (
+                  <option key={cat} value={cat} />
+                ))}
+              </datalist>
 
-            {activeTab === 'monthly' && (
               <select
                 className="timeframe-input"
-                value={timeframeValue}
-                onChange={(e) => setTimeframeValue(e.target.value)}
-                required
+                value={priorityValue}
+                onChange={(e) => setPriorityValue(e.target.value)}
               >
-                <option value="" disabled>Select Month</option>
-                {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
-                  <option key={month} value={month}>{month}</option>
-                ))}
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
               </select>
-            )}
 
-            {activeTab === 'yearly' && (
-              <input
-                type="number"
-                className="timeframe-input"
-                placeholder="Year (e.g. 2024)"
-                value={timeframeValue}
-                onChange={(e) => setTimeframeValue(e.target.value)}
-                required
-                min="2024"
-                max="2100"
-              />
-            )}
+              {activeTab === 'daily' && (
+                <input
+                  type="date"
+                  className="timeframe-input"
+                  value={timeframeValue}
+                  onChange={(e) => setTimeframeValue(e.target.value)}
+                  required
+                />
+              )}
 
-            <button
-              type="submit"
-              className="add-button"
-              disabled={!inputValue.trim() || !timeframeValue}
-            >
-              Add
-            </button>
+              {activeTab === 'monthly' && (
+                <select
+                  className="timeframe-input"
+                  value={timeframeValue}
+                  onChange={(e) => setTimeframeValue(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>Select Month</option>
+                  {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
+                    <option key={month} value={month}>{month}</option>
+                  ))}
+                </select>
+              )}
+
+              {activeTab === 'yearly' && (
+                <input
+                  type="number"
+                  className="timeframe-input"
+                  placeholder="Year (e.g. 2024)"
+                  value={timeframeValue}
+                  onChange={(e) => setTimeframeValue(e.target.value)}
+                  required
+                  min="2024"
+                  max="2100"
+                />
+              )}
+
+              <span
+                title={(!inputValue.trim() || !timeframeValue) ? "Please fill in the main task name above" : "Add Task"}
+                style={{ display: 'inline-block', cursor: (!inputValue.trim() || !timeframeValue) ? 'not-allowed' : 'pointer' }}
+              >
+                <button
+                  type="submit"
+                  className="add-button"
+                  disabled={!inputValue.trim() || !timeframeValue}
+                  style={{ pointerEvents: (!inputValue.trim() || !timeframeValue) ? 'none' : 'auto' }}
+                >
+                  Add Task
+                </button>
+              </span>
+            </div>
           </form>
 
           <div className="board">
@@ -374,7 +546,10 @@ function App() {
               onDrop={(e) => handleDrop(e, 'todo')}
             >
               <div className="column-header">
-                To Do
+                <div className="column-title">
+                  <span className="column-dot dot-todo"></span>
+                  To Do
+                </div>
                 <span className="task-count">{todoTasks.length}</span>
               </div>
               <div className="task-list">
@@ -392,7 +567,10 @@ function App() {
               onDrop={(e) => handleDrop(e, 'in-process')}
             >
               <div className="column-header">
-                In Process
+                <div className="column-title">
+                  <span className="column-dot dot-in-process"></span>
+                  In Process
+                </div>
                 <span className="task-count">{inProcessTasks.length}</span>
               </div>
               <div className="task-list">
@@ -410,7 +588,10 @@ function App() {
               onDrop={(e) => handleDrop(e, 'done')}
             >
               <div className="column-header">
-                Done
+                <div className="column-title">
+                  <span className="column-dot dot-done"></span>
+                  Done
+                </div>
                 <span className="task-count">{doneTasks.length}</span>
               </div>
               <div className="task-list">
@@ -422,6 +603,14 @@ function App() {
               </div>
             </div>
           </div>
+
+          {editingTask && (
+            <EditTaskModal
+              task={editingTask}
+              onClose={() => setEditingTask(null)}
+              onSave={updateTaskDetails}
+            />
+          )}
         </>
       )}
     </div>

@@ -1,6 +1,0 @@
-/Users/munawar/Documents/GitHub/Task-manager/backend/task-manager-backend/src/main/java/com/munawar/TaskManagerBackendApplication.java
-/Users/munawar/Documents/GitHub/Task-manager/backend/task-manager-backend/src/main/java/com/munawar/controller/TaskController.java
-/Users/munawar/Documents/GitHub/Task-manager/backend/task-manager-backend/src/main/java/com/munawar/entity/Task.java
-/Users/munawar/Documents/GitHub/Task-manager/backend/task-manager-backend/src/main/java/com/munawar/repo/ITaskRepo.java
-/Users/munawar/Documents/GitHub/Task-manager/backend/task-manager-backend/src/main/java/com/munawar/service/ITaskService.java
-/Users/munawar/Documents/GitHub/Task-manager/backend/task-manager-backend/src/main/java/com/munawar/service/TaskService.java

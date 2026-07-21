@@ -1,68 +1,95 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  --bg-color: #f3f4f6;
-  --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-  --text-main: #1f2937;
-  --text-muted: #6b7280;
-  --card-bg: rgba(255, 255, 255, 0.7);
-  --card-border: rgba(255, 255, 255, 0.5);
-  --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-  --primary-accent: #6366f1; /* Indigo */
-  --primary-hover: #4f46e5;
-  --todo-border: #e5e7eb;
-  --in-process-border: #60a5fa;
-  --done-border: #34d399;
+  /* Default: Light Theme (Parchment & Terracotta) */
+  --bg-color: #F9F8F6;
+  --bg-gradient: #F9F8F6;
+  --card-bg: #FFFFFF;
+  --border-color: #E5E3DB;
   
-  /* Component specific variables */
-  --input-bg: white;
-  --input-border: #e5e7eb;
-  --column-bg: rgba(249, 250, 251, 0.5);
-  --task-card-bg: white;
-  --task-card-hover-border: #f3f4f6;
-  --btn-hover-bg: rgba(255, 255, 255, 0.5);
-  --action-btn-bg: #f3f4f6;
-  --delete-btn-hover-bg: #fee2e2;
+  --primary-accent: #D96D55; /* Terracotta / Burnt Orange */
+  --primary-hover: #C55D48;
   
-  --badge-daily-bg: #fee2e2;
-  --badge-daily-text: #ef4444;
-  --badge-monthly-bg: #e0e7ff;
-  --badge-monthly-text: #4f46e5;
-  --badge-yearly-bg: #dcfce7;
-  --badge-yearly-text: #16a34a;
+  --text-main: #2D2D2D;
+  --text-muted: #73716A;
+  
+  --column-bg: transparent;
+  --task-card-bg: #FFFFFF;
+  --task-card-hover-border: #D96D55;
+  
+  /* Very soft, diffused shadows */
+  --card-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.04), 0 1px 4px -1px rgba(0, 0, 0, 0.02);
+  --hover-shadow: 0 10px 20px -4px rgba(0, 0, 0, 0.06), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
 
-  --font-family: 'Outfit', sans-serif;
+  --btn-hover-bg: rgba(0, 0, 0, 0.04);
+  --input-bg: #FFFFFF;
+  --input-border: #E5E3DB;
+  
+  /* Priority Colors (Muted / Pastel for elegance) */
+  --priority-low: #42825B;
+  --priority-low-bg: #E8F0EB;
+  --priority-medium: #B8860B;
+  --priority-medium-bg: #F8F3E6;
+  --priority-high: #B04A4A;
+  --priority-high-bg: #F4E8E8;
+  
+  --todo-color: #A09E96;
+  --in-process-color: #D96D55;
+  --done-color: #42825B;
+
+  /* Refined, soft shapes */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-8: 48px;
+
+  --font-primary: 'Inter', sans-serif;
+  --font-heading: 'Merriweather', serif;
 }
 
 [data-theme='dark'] {
-  --bg-color: #0A0A0B;
-  --bg-gradient: radial-gradient(circle at 50% 0%, #1A1A24 0%, #0A0A0B 100%);
-  --text-main: #FFFFFF;
-  --text-muted: #A0A0AB;
-  --card-bg: rgba(26, 26, 36, 0.6);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --primary-accent: #9b87f5;
-  --primary-hover: #7E69AB;
-  --todo-border: rgba(255, 255, 255, 0.1);
-  --in-process-border: #0EA5E9;
-  --done-border: #10B981;
+  /* Dark Theme (Warm Charcoal) */
+  --bg-color: #1E1D1B;
+  --bg-gradient: #1E1D1B;
+  --card-bg: #2A2826;
+  --border-color: #3E3B38;
   
-  --input-bg: rgba(0, 0, 0, 0.3);
-  --input-border: rgba(255, 255, 255, 0.1);
-  --column-bg: rgba(20, 20, 28, 0.5);
-  --task-card-bg: rgba(35, 35, 45, 0.7);
-  --task-card-hover-border: rgba(155, 135, 245, 0.5);
+  --primary-accent: #D96D55;
+  --primary-hover: #E3836F;
+  
+  --text-main: #E6E4DD;
+  --text-muted: #94918A;
+  
+  --column-bg: transparent;
+  --task-card-bg: #2A2826;
+  --task-card-hover-border: #D96D55;
+  
+  --card-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.2);
+  --hover-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.3);
+
   --btn-hover-bg: rgba(255, 255, 255, 0.05);
-  --action-btn-bg: rgba(255, 255, 255, 0.05);
-  --delete-btn-hover-bg: rgba(239, 68, 68, 0.15);
+  --input-bg: #2A2826;
+  --input-border: #3E3B38;
   
-  --badge-daily-bg: rgba(239, 68, 68, 0.15);
-  --badge-daily-text: #FCA5A5;
-  --badge-monthly-bg: rgba(155, 135, 245, 0.15);
-  --badge-monthly-text: #D6BCFA;
-  --badge-yearly-bg: rgba(16, 185, 129, 0.15);
-  --badge-yearly-text: #6EE7B7;
+  /* Status Colors */
+  --priority-low: #68A67F;
+  --priority-low-bg: rgba(104, 166, 127, 0.15);
+  --priority-medium: #D1A334;
+  --priority-medium-bg: rgba(209, 163, 52, 0.15);
+  --priority-high: #D16B6B;
+  --priority-high-bg: rgba(209, 107, 107, 0.15);
+
+  --todo-color: #73716A;
+  --in-process-color: #D96D55;
+  --done-color: #68A67F;
 }
 
 * {
@@ -72,20 +99,28 @@
 }
 
 body {
-  font-family: var(--font-family);
+  font-family: var(--font-primary);
   background: var(--bg-gradient);
   background-attachment: fixed;
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  color: var(--text-main);
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: var(--space-5);
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -99,13 +134,13 @@ button {
   outline: none;
 }
 
-input, select {
+input, select, textarea {
   font-family: inherit;
   color: inherit;
   outline: none;
 }
 
-input::placeholder {
+input::placeholder, textarea::placeholder {
   color: var(--text-muted);
 }
 
@@ -120,10 +155,10 @@ input::placeholder {
 }
  
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1; 
-  border-radius: 10px;
+  background: var(--border-color); 
+  border-radius: var(--radius-lg);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8; 
+  background: var(--text-muted); 
 }

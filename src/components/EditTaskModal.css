@@ -1,0 +1,213 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  width: 90%;
+  max-width: 500px;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--hover-shadow);
+  border: 1px solid var(--border-color);
+  animation: modalFadeIn 0.2s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--space-3);
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.close-btn {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  border: none;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--text-main);
+}
+
+.form-group {
+  margin-bottom: var(--space-4);
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.form-group input[type="text"],
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-size: 1rem;
+  font-family: var(--font-primary);
+  transition: border-color 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+  border-color: var(--primary-accent);
+}
+
+/* Subtasks */
+.subtasks-section {
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--border-color);
+  padding-top: var(--space-4);
+}
+
+.subtasks-header {
+  font-size: 1.1rem;
+  font-family: var(--font-heading);
+  color: var(--text-main);
+  margin-bottom: var(--space-3);
+}
+
+.subtasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-color);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.subtask-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary-accent);
+}
+
+.subtask-text {
+  flex-grow: 1;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.subtask-text.completed {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.remove-subtask-btn {
+  color: var(--text-muted);
+  background: transparent;
+  padding: 2px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.remove-subtask-btn:hover {
+  color: var(--priority-high);
+}
+
+.add-subtask-form {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.add-subtask-form input {
+  flex-grow: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text-main);
+}
+
+.add-subtask-form button {
+  background: var(--btn-hover-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.add-subtask-form button:hover {
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: var(--btn-hover-bg);
+}
+
+.btn-primary {
+  background: var(--primary-accent);
+  border: 1px solid var(--primary-accent);
+  color: #FFF;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}

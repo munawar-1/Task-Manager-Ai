@@ -1,6 +1,0 @@
-com/munawar/TaskManagerBackendApplication.class
-com/munawar/entity/Task.class
-com/munawar/service/ITaskService.class
-com/munawar/repo/ITaskRepo.class
-com/munawar/service/TaskService.class
-com/munawar/controller/TaskController.class

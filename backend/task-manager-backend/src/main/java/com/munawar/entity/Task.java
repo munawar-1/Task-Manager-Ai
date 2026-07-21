@@ -46,6 +46,10 @@ public class Task {
     @JsonIgnore
     private User user;
 
+    @Convert(converter = SubtaskListConverter.class)
+    @Column(columnDefinition = "TEXT")
+    private java.util.List<Subtask> subtasks = new java.util.ArrayList<>();
+
     // Constructors
     public Task() {}
 
