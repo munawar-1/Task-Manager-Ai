@@ -46,8 +46,8 @@ public class Task {
     @JsonIgnore
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "task_id")
+    @Convert(converter = SubtaskListConverter.class)
+    @Column(columnDefinition = "TEXT")
     private java.util.List<Subtask> subtasks = new java.util.ArrayList<>();
 
     // Constructors

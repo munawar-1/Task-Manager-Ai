@@ -8,6 +8,53 @@ import EditTaskModal from './components/EditTaskModal';
 import { auth } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
+const AddSubtaskForm = ({ onAdd }) => {
+  const [isAdding, setIsAdding] = useState(false);
+  const [text, setText] = useState('');
+
+  if (!isAdding) {
+    return (
+      <button 
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsAdding(true); }} 
+        style={{ marginTop: '8px', background: 'transparent', color: 'var(--primary-color, #4a90e2)', border: '1px dashed #ccc', borderRadius: '4px', padding: '4px 8px', fontSize: '0.75rem', cursor: 'pointer', width: '100%', textAlign: 'center' }}
+      >
+        + Add Subtask
+      </button>
+    );
+  }
+
+  return (
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (text.trim()) {
+        onAdd(text.trim());
+        setText('');
+        setIsAdding(false);
+      }
+    }} style={{ display: 'flex', marginTop: '8px', gap: '4px' }}>
+      <input 
+        autoFocus
+        value={text}
+        onChange={e => setText(e.target.value)}
+        placeholder="Enter subtask..." 
+        style={{ flex: 1, padding: '4px 6px', fontSize: '0.8rem', border: '1px solid #e2e8f0', borderRadius: '4px', background: 'var(--bg-secondary, #fff)', color: 'var(--text-primary, #333)' }} 
+        onClick={(e) => e.stopPropagation()}
+        onBlur={() => {
+           if (!text.trim()) setIsAdding(false);
+        }}
+        onKeyDown={(e) => {
+           if (e.key === 'Escape') {
+             setIsAdding(false);
+             setText('');
+           }
+        }}
+      />
+      <button type="submit" style={{ padding: '4px 8px', fontSize: '0.8rem', background: 'var(--primary-color, #4a90e2)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }} onClick={(e) => e.stopPropagation()}>Add</button>
+    </form>
+  );
+};
+
 function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -23,7 +70,7 @@ function App() {
 
   useEffect(() => {
     if (!user) return;
-    
+
     const loadTasks = async () => {
       try {
         const data = await api.getTasks();
@@ -45,7 +92,7 @@ function App() {
   const [categoryValue, setCategoryValue] = useState('')
   const [priorityValue, setPriorityValue] = useState('Medium')
   const [viewMode, setViewMode] = useState('board') // 'board', 'reports'
-  
+
   const getCurrentTimeframe = (tab) => {
     const now = new Date()
     if (tab === 'daily') {
@@ -141,6 +188,23 @@ function App() {
 
   const updateTaskDetails = async (id, updatedData) => {
     try {
+      if (updatedData.subtasks) {
+        const completedCount = updatedData.subtasks.filter(st => st.completed).length;
+        const totalCount = updatedData.subtasks.length;
+        if (totalCount > 0) {
+          if (completedCount === totalCount) {
+            updatedData.status = 'done';
+            updatedData.completedAt = new Date().toISOString();
+          } else if (completedCount > 0) {
+            updatedData.status = 'in-process';
+            updatedData.completedAt = null;
+          } else {
+            updatedData.status = 'todo';
+            updatedData.completedAt = null;
+          }
+        }
+      }
+
       await api.updateTask(id, updatedData);
       setTasks(
         tasks.map((task) => {
@@ -195,16 +259,57 @@ function App() {
         )}
       </div>
       <p className="task-text">{task.text}</p>
-      
-      {task.subtasks && task.subtasks.length > 0 && (
-        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '-4px' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          {task.subtasks.filter(st => st.completed).length} / {task.subtasks.length} subtasks
-        </div>
-      )}
+
+      <div className="task-subtasks-preview" style={{ marginTop: '8px' }}>
+        {task.subtasks && task.subtasks.length > 0 && (
+          <>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              {task.subtasks.filter(st => st.completed).length} / {task.subtasks.length} subtasks
+            </div>
+            <div className="subtasks-list-preview" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {task.subtasks.map((st, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', fontSize: '0.85rem', lineHeight: '1.2' }}>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', cursor: 'pointer', flex: 1 }} onClick={(e) => e.stopPropagation()}>
+                    <input 
+                      type="checkbox" 
+                      checked={st.completed} 
+                      onChange={(e) => {
+                        const updatedSubtasks = [...task.subtasks];
+                        updatedSubtasks[index] = { ...st, completed: e.target.checked };
+                        updateTaskDetails(task.id, { subtasks: updatedSubtasks });
+                      }}
+                      style={{ cursor: 'pointer', marginTop: '2px' }}
+                    />
+                    <span style={{ textDecoration: st.completed ? 'line-through' : 'none', color: st.completed ? 'var(--text-muted)' : 'inherit', wordBreak: 'break-word' }}>
+                      {st.text}
+                    </span>
+                  </label>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const updatedSubtasks = task.subtasks.filter((_, i) => i !== index);
+                      updateTaskDetails(task.id, { subtasks: updatedSubtasks });
+                    }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999', fontSize: '1.1rem', lineHeight: '1', padding: '0 4px' }}
+                    title="Delete subtask"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        <AddSubtaskForm onAdd={(text) => {
+          const updatedSubtasks = [...(task.subtasks || []), { text, completed: false }];
+          updateTaskDetails(task.id, { subtasks: updatedSubtasks });
+        }} />
+      </div>
 
       <div className="task-actions">
         <button
@@ -276,7 +381,7 @@ function App() {
             </button>
           </div>
         </header>
-        <Auth onLoginSuccess={() => {}} />
+        <Auth onLoginSuccess={() => { }} />
       </div>
     );
   }
@@ -316,7 +421,7 @@ function App() {
           <Profile user={user} onLogout={handleLogout} />
         </div>
       </header>
-      
+
       <p className="welcome-text">Welcome back, {user.displayName || user.email.split('@')[0] || 'User'}! Organize your day.</p>
 
       <div className="tabs-container">
@@ -418,7 +523,7 @@ function App() {
                 />
               )}
 
-              <span 
+              <span
                 title={(!inputValue.trim() || !timeframeValue) ? "Please fill in the main task name above" : "Add Task"}
                 style={{ display: 'inline-block', cursor: (!inputValue.trim() || !timeframeValue) ? 'not-allowed' : 'pointer' }}
               >
@@ -500,8 +605,8 @@ function App() {
           </div>
 
           {editingTask && (
-            <EditTaskModal 
-              task={editingTask} 
+            <EditTaskModal
+              task={editingTask}
               onClose={() => setEditingTask(null)}
               onSave={updateTaskDetails}
             />
