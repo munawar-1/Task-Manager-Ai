@@ -7,18 +7,7 @@
     <title>task-manager</title>
   </head>
   <body>
-    <!-- Touch Drag and Drop Polyfill -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0/default.css">
-    <script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0/index.min.js"></script>
-    <script>
-      window.addEventListener('load', function() {
-        MobileDragDrop.polyfill({
-          dragImageTranslateOverride: function(event, hoverElement, x, y) {
-            return { x: 0, y: 0 };
-          }
-        });
-      });
-    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
