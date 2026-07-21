@@ -59,6 +59,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
+  const [tasksLoading, setTasksLoading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -72,11 +73,14 @@ function App() {
     if (!user) return;
 
     const loadTasks = async () => {
+      setTasksLoading(true);
       try {
         const data = await api.getTasks();
         setTasks(data);
       } catch (error) {
         console.error("Failed to fetch tasks:", error);
+      } finally {
+        setTasksLoading(false);
       }
     };
     loadTasks();
@@ -618,7 +622,9 @@ function App() {
                 <span className="task-count">{todoTasks.length}</span>
               </div>
               <div className="task-list">
-                {todoTasks.length === 0 ? (
+                {tasksLoading ? (
+                  <div className="empty-column">Loading tasks...</div>
+                ) : todoTasks.length === 0 ? (
                   <div className="empty-column">No tasks here</div>
                 ) : (
                   todoTasks.map(renderTaskCard)
@@ -639,7 +645,9 @@ function App() {
                 <span className="task-count">{inProcessTasks.length}</span>
               </div>
               <div className="task-list">
-                {inProcessTasks.length === 0 ? (
+                {tasksLoading ? (
+                  <div className="empty-column">Loading tasks...</div>
+                ) : inProcessTasks.length === 0 ? (
                   <div className="empty-column">Nothing in process</div>
                 ) : (
                   inProcessTasks.map(renderTaskCard)
@@ -660,7 +668,9 @@ function App() {
                 <span className="task-count">{doneTasks.length}</span>
               </div>
               <div className="task-list">
-                {doneTasks.length === 0 ? (
+                {tasksLoading ? (
+                  <div className="empty-column">Loading tasks...</div>
+                ) : doneTasks.length === 0 ? (
                   <div className="empty-column">No completed tasks</div>
                 ) : (
                   doneTasks.map(renderTaskCard)

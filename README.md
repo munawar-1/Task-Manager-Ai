@@ -2,7 +2,7 @@
 
 A lightning-fast, modern, full-stack Task Manager application built with React, Spring Boot, MySQL, and Firebase Authentication.
 
-> Made with Antigravity 🚀
+> Made with Antigravity 
 
 ## Overview
 
