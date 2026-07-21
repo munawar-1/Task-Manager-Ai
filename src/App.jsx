@@ -3,13 +3,25 @@ import './App.css'
 import Reports from './Reports'
 import { api } from './api'
 import Auth from './components/Auth';
+import Profile from './components/Profile';
+import { auth } from './firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
     
     const loadTasks = async () => {
       try {
@@ -20,10 +32,10 @@ function App() {
       }
     };
     loadTasks();
-  }, [isAuthenticated]);
+  }, [user]);
 
   useEffect(() => {
-    const handleAuthError = () => setIsAuthenticated(false);
+    const handleAuthError = () => signOut(auth);
     window.addEventListener('auth-error', handleAuthError);
     return () => window.removeEventListener('auth-error', handleAuthError);
   }, []);
@@ -69,10 +81,12 @@ function App() {
 
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode)
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userName');
-    setIsAuthenticated(false);
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    }
   }
 
   const handleTabChange = (tab) => {
@@ -194,7 +208,11 @@ function App() {
     }
   }
 
-  if (!isAuthenticated) {
+  if (authLoading) {
+    return <div className="app-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Loading...</div>;
+  }
+
+  if (!user) {
     return (
       <div className="app-container">
         <header className="header">
@@ -209,7 +227,7 @@ function App() {
             </button>
           </div>
         </header>
-        <Auth onLoginSuccess={() => setIsAuthenticated(true)} />
+        <Auth onLoginSuccess={() => {}} />
       </div>
     );
   }
@@ -244,9 +262,10 @@ function App() {
               )}
             </button>
             <button onClick={handleLogout} className="action-btn" style={{marginLeft: '15px'}}>Logout</button>
+            <Profile user={user} />
           </div>
         </div>
-        <p>Welcome back, {localStorage.getItem('userName') || 'User'}! Organize your day.</p>
+        <p>Welcome back, {user.displayName || user.email.split('@')[0] || 'User'}! Organize your day.</p>
       </header>
 
       <div className="tabs-container">

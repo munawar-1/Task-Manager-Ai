@@ -1,3 +1,4 @@
+import { auth } from './firebase';
 
 const BASE_URL = 'http://localhost:8080/api'; // Change this to your actual backend URL once developed
 
@@ -6,7 +7,16 @@ const BASE_URL = 'http://localhost:8080/api'; // Change this to your actual back
  */
 async function fetchAPI(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
-  const token = localStorage.getItem('token');
+  
+  let token = null;
+  if (auth.currentUser) {
+    try {
+      token = await auth.currentUser.getIdToken();
+    } catch (e) {
+      console.warn('Failed to get Firebase token', e);
+    }
+  }
+
   const defaultOptions = {
     method: options.method || 'GET',
     headers: {
@@ -20,23 +30,28 @@ async function fetchAPI(endpoint, options = {}) {
   try {
     const response = await fetch(url, defaultOptions);
     if (response.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userName');
-      window.dispatchEvent(new Event('auth-error'));
+      console.error('Received 401 Unauthorized from backend. Token might be invalid or rejected.');
+      // window.dispatchEvent(new Event('auth-error'));
     }
     
     if (!response.ok) {
-      let errorMessage = 'An error occurred';
+      let errorMessage = `HTTP Error ${response.status}`;
       try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorData.error || errorMessage;
+        const text = await response.text();
+        try {
+          const errorData = JSON.parse(text);
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch (e) {
+          errorMessage = text || errorMessage;
+        }
       } catch (e) {
-        // If not JSON, try text
-        errorMessage = await response.text() || errorMessage;
+        console.error("Failed to read error response", e);
       }
       throw new Error(errorMessage);
     }
-    return await response.json();
+    // Check for empty body before parsing JSON
+    const text = await response.text();
+    return text ? JSON.parse(text) : {};
   } catch (error) {
     console.error(`🔴🔴🔴 API ERROR fetching ${endpoint}:`, error);
     throw error;
@@ -47,20 +62,6 @@ async function fetchAPI(endpoint, options = {}) {
  * API Callers for Task Manager
  */
 export const api = {
-  login: async (credentials) => {
-    return await fetchAPI('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    });
-  },
-  
-  register: async (userData) => {
-    return await fetchAPI('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
-  },
-
   // Get all tasks
   getTasks: async () => {
     return await fetchAPI('/tasks');

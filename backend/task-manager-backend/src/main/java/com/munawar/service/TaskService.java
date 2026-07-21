@@ -14,10 +14,15 @@ public class TaskService implements ITaskService{
     @Autowired
     private ITaskRepo repo;
 
+    @Autowired
+    private com.munawar.repo.IUserRepo userRepo;
+
     private User getAuthenticatedUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof User) {
-            return (User) principal;
+        if (principal instanceof org.springframework.security.oauth2.jwt.Jwt jwt) {
+            String email = jwt.getClaimAsString("email");
+            return userRepo.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found in DB"));
         }
         throw new RuntimeException("User not authenticated");
     }
