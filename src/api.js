@@ -1,6 +1,6 @@
 import { auth } from './firebase';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'; // Change this to your actual backend URL once developed
+const BASE_URL = 'https://task-manager-ai-d2wc.onrender.com/api';
 
 /**
  * Helper function for handling API requests

@@ -189,6 +189,12 @@ function App() {
   }
 
   const updateTaskStatus = async (id, newStatus) => {
+    // Prevent moving tasks that are currently being saved to the backend (temp IDs)
+    if (id > 1000000000000) {
+      console.warn("Cannot move a task that is still being saved to the server.");
+      return;
+    }
+
     const completedAt = newStatus === 'done' ? new Date().toISOString() : null;
     
     // Store old tasks in case we need to revert
