@@ -298,23 +298,37 @@ function App() {
     updateTaskStatus(id, status)
   }
 
-  const renderTaskCard = (task) => (
-    <div
-      key={task.id}
-      className="task-card"
-      draggable
-      onDragStart={(e) => handleDragStart(e, task.id)}
-    >
-      <div className="task-header">
-        <span className={`type-badge ${task.type}-badge`}>
-          {task.type === 'daily' ? new Date(task.timeframe).toLocaleDateString() : task.timeframe}
-        </span>
-        {task.priority && (
-          <span className={`priority-badge priority-${task.priority.toLowerCase()}`}>
-            {task.priority}
+  const renderTaskCard = (task) => {
+    const todayStr = getCurrentTimeframe('daily');
+    const isOverdue = task.type === 'daily' && task.status !== 'done' && task.timeframe < todayStr;
+    const formattedDate = task.type === 'daily'
+      ? (task.timeframe.includes('T') ? new Date(task.timeframe) : new Date(task.timeframe + 'T00:00:00')).toLocaleDateString()
+      : task.timeframe;
+
+    return (
+      <div
+        key={task.id}
+        className={`task-card ${isOverdue ? 'is-overdue' : ''}`}
+        draggable
+        onDragStart={(e) => handleDragStart(e, task.id)}
+      >
+        <div className="task-header">
+          <span className={`type-badge ${task.type}-badge`}>
+            {formattedDate}
           </span>
-        )}
-      </div>
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+            {isOverdue && (
+              <span className="priority-badge overdue-badge">
+                ⚠️ Overdue
+              </span>
+            )}
+            {task.priority && (
+              <span className={`priority-badge priority-${task.priority.toLowerCase()}`}>
+                {task.priority}
+              </span>
+            )}
+          </div>
+        </div>
       <p className="task-text">{task.text}</p>
 
       <div className="task-subtasks-preview" style={{ marginTop: '8px' }}>
@@ -414,7 +428,8 @@ function App() {
         </button>
       </div>
     </div>
-  )
+  );
+};
 
   const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
   const sortTasks = (tasksArr) => {
@@ -426,7 +441,20 @@ function App() {
     });
   };
 
-  const activeTasks = tasks.filter(t => t.type === activeTab)
+  const todayStr = getCurrentTimeframe('daily');
+  const activeTasks = tasks.filter(t => {
+    if (t.type !== activeTab) return false;
+
+    // For Daily Tasks tab: hide completed tasks from previous days so today's board remains clean
+    if (activeTab === 'daily' && t.status === 'done') {
+      const completedDateStr = t.completedAt ? t.completedAt.split('T')[0] : t.timeframe;
+      if (t.timeframe < todayStr && completedDateStr < todayStr) {
+        return false;
+      }
+    }
+
+    return true;
+  });
   const todoTasks = sortTasks(activeTasks.filter(t => t.status === 'todo'))
   const inProcessTasks = sortTasks(activeTasks.filter(t => t.status === 'in-process'))
   const doneTasks = sortTasks(activeTasks.filter(t => t.status === 'done'))

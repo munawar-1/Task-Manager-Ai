@@ -333,6 +333,17 @@ select.timeframe-input {
   background: var(--priority-high-bg);
 }
 
+.overdue-badge {
+  color: #D14343;
+  background: rgba(209, 67, 67, 0.12);
+  border: 1px solid rgba(209, 67, 67, 0.25);
+  font-weight: 600;
+}
+
+.task-card.is-overdue {
+  border-left: 3px solid #D14343;
+}
+
 .task-text {
   font-size: 1.05rem;
   font-weight: 400;
