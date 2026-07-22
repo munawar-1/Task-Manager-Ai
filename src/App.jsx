@@ -699,12 +699,12 @@ function App() {
           {showSlowWakeupMessage && (
             <div style={{
               position: 'fixed', bottom: '24px', right: '24px', 
-              background: 'var(--bg-card, #2d3748)', color: 'var(--text-primary, #fff)', 
+              background: 'var(--card-bg, #2d3748)', color: 'var(--text-main, #fff)', 
               padding: '16px 20px', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
               zIndex: 1000, display: 'flex', alignItems: 'center', gap: '16px',
-              borderLeft: '4px solid var(--primary-color, #4a90e2)'
+              borderLeft: '4px solid var(--primary-accent, #4a90e2)'
             }}>
-              <div className="spinner" style={{ width: '24px', height: '24px', borderWidth: '3px', borderColor: 'var(--primary-color, #4a90e2) transparent var(--primary-color, #4a90e2) transparent' }}></div>
+              <div className="spinner" style={{ width: '24px', height: '24px', borderWidth: '3px', borderColor: 'var(--primary-accent, #4a90e2) transparent var(--primary-accent, #4a90e2) transparent' }}></div>
               <div>
                 <h4 style={{ margin: '0 0 6px', fontSize: '1rem', fontWeight: '600' }}>Waking up server...</h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted, #a0aec0)', maxWidth: '280px', lineHeight: '1.4' }}>
