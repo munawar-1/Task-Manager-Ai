@@ -313,9 +313,14 @@ function App() {
         onDragStart={(e) => handleDragStart(e, task.id)}
       >
         <div className="task-header">
-          <span className={`type-badge ${task.type}-badge`}>
-            {formattedDate}
-          </span>
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span className={`type-badge ${task.type}-badge`}>
+              {formattedDate}
+            </span>
+            <span className="category-tag">
+              {task.category || 'General'}
+            </span>
+          </div>
           <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             {isOverdue && (
               <span className="priority-badge overdue-badge">

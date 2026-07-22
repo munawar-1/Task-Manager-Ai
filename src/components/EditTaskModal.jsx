@@ -31,7 +31,7 @@ export default function EditTaskModal({ task, onClose, onSave }) {
     onSave(task.id, {
       text,
       priority,
-      category,
+      category: category.trim() || 'General',
       subtasks
     });
     onClose();

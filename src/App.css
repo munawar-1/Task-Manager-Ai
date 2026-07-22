@@ -310,6 +310,19 @@ select.timeframe-input {
   letter-spacing: 0.05em;
 }
 
+.category-tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--btn-hover-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+}
+
 .priority-badge {
   font-size: 0.75rem;
   font-weight: 500;
