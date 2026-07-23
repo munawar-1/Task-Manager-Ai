@@ -74,48 +74,50 @@
   width: 12px;
   height: 12px;
   border-radius: 2px;
-  background-color: var(--todo-border);
+  background-color: #EFECE6;
   transition: all 0.2s ease;
 }
 
 [data-theme='dark'] .heatmap-cell {
-  background-color: #2d3748; /* darker base color for dark mode */
+  background-color: #34302C;
 }
 
-/* Leetcode / GitHub style colors */
+/* Claude / Terracotta Warm Orange Theme colors */
 .heatmap-cell.level-0 {
-  background-color: var(--todo-border);
+  background-color: #EFECE6;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 [data-theme='dark'] .heatmap-cell.level-0 {
-  background-color: #2d3748;
+  background-color: #34302C;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .heatmap-cell.level-1 {
-  background-color: #c6e48b;
+  background-color: #FCD8C9;
 }
 [data-theme='dark'] .heatmap-cell.level-1 {
-  background-color: #0e4429;
+  background-color: #5E2E23;
 }
 
 .heatmap-cell.level-2 {
-  background-color: #7bc96f;
+  background-color: #F39E82;
 }
 [data-theme='dark'] .heatmap-cell.level-2 {
-  background-color: #006d32;
+  background-color: #944230;
 }
 
 .heatmap-cell.level-3 {
-  background-color: #239a3b;
+  background-color: #D96D55;
 }
 [data-theme='dark'] .heatmap-cell.level-3 {
-  background-color: #26a641;
+  background-color: #D96D55;
 }
 
 .heatmap-cell.level-4 {
-  background-color: #196127;
+  background-color: #AD402A;
 }
 [data-theme='dark'] .heatmap-cell.level-4 {
-  background-color: #39d353;
+  background-color: #FF8C69;
 }
 
 .heatmap-cell:hover {
