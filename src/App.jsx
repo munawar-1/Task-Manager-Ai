@@ -505,18 +505,32 @@ function App() {
         </div>
 
         <div className="header-center">
-          <div className="view-toggle">
+          <div className="view-toggle" role="tablist" aria-label="View selection">
             <button
               className={`toggle-btn ${viewMode === 'board' ? 'active' : ''}`}
               onClick={() => setViewMode('board')}
+              role="tab"
+              aria-selected={viewMode === 'board'}
             >
-              Board
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="9" y1="3" x2="9" y2="21" />
+                <line x1="15" y1="3" x2="15" y2="21" />
+              </svg>
+              <span>Board</span>
             </button>
             <button
               className={`toggle-btn ${viewMode === 'reports' ? 'active' : ''}`}
               onClick={() => setViewMode('reports')}
+              role="tab"
+              aria-selected={viewMode === 'reports'}
             >
-              Reports
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+              </svg>
+              <span>Reports</span>
             </button>
           </div>
         </div>
